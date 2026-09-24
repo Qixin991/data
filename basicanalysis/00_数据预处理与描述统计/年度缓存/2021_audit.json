@@ -1,0 +1,16 @@
+{
+  "year": 2021,
+  "all_rows": 11146476,
+  "all_invalid_value": 0,
+  "hs84_raw_rows": 1369109,
+  "hs84_duplicate_keys": 0,
+  "hs84_invalid_value": 0,
+  "hs84_quantity_missing": 24441,
+  "hs84_quantity_nonpositive": 0,
+  "hs4_rows": 469017,
+  "exporters": 226,
+  "importers": 226,
+  "value_thousand_usd": 2455140647.518,
+  "exporter_mapping_missing": 0,
+  "importer_mapping_missing": 0
+}

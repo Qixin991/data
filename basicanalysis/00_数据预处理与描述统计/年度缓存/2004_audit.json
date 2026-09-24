@@ -1,0 +1,16 @@
+{
+  "year": 2004,
+  "all_rows": 8359779,
+  "all_invalid_value": 0,
+  "hs84_raw_rows": 1042888,
+  "hs84_duplicate_keys": 0,
+  "hs84_invalid_value": 0,
+  "hs84_quantity_missing": 4902,
+  "hs84_quantity_nonpositive": 0,
+  "hs4_rows": 360833,
+  "exporters": 222,
+  "importers": 222,
+  "value_thousand_usd": 1290621954.874,
+  "exporter_mapping_missing": 0,
+  "importer_mapping_missing": 0
+}

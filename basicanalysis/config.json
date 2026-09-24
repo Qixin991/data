@@ -1,0 +1,47 @@
+{
+  "seed": 42,
+  "features": [
+    "log_export",
+    "destinations",
+    "hhi",
+    "top_share",
+    "growth",
+    "growth_mean3",
+    "growth_std3",
+    "dest_log_gdp",
+    "dest_gdp_growth_pct",
+    "dest_inflation_pct",
+    "dest_log_gdp_coverage",
+    "dest_gdp_growth_pct_coverage",
+    "dest_inflation_pct_coverage"
+  ],
+  "exporters": [
+    842,
+    276,
+    392,
+    156,
+    380,
+    826,
+    251,
+    490,
+    702,
+    528,
+    410,
+    458,
+    124,
+    484,
+    757,
+    764,
+    752,
+    372,
+    40,
+    724
+  ],
+  "hs2": "84",
+  "years": [
+    1995,
+    2024
+  ],
+  "risk_threshold": -0.2,
+  "minimum_thousand_usd": 1000
+}
