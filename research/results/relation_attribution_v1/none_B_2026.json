@@ -1,0 +1,40 @@
+{
+  "features": [
+    "log_export",
+    "growth_1",
+    "growth_mean3",
+    "growth_mean5",
+    "growth_sd3",
+    "growth_sd5",
+    "n_dest",
+    "hhi",
+    "top_share",
+    "graph_coverage",
+    "market_change",
+    "market_history_mean",
+    "market_volatility",
+    "market_feature_coverage",
+    "destination_gdp_growth",
+    "destination_gdp_growth_coverage",
+    "destination_log_gdp",
+    "destination_log_gdp_coverage",
+    "destination_inflation",
+    "destination_inflation_coverage",
+    "diag_portfolio_variance",
+    "independent_joint_down",
+    "covariance_share_coverage",
+    "estimable_pair_exposure"
+  ],
+  "parameters": {
+    "max_depth": 4,
+    "n_estimators": 150
+  },
+  "seed": 2026,
+  "threads": 4,
+  "input_hashes": {
+    "data/features_lag0_L8.csv.gz": "01e2961df48bf54862c4290997be746f2213638a5bf469b29c97fe5c4483d309",
+    "data/trade_arrays.npz": "2acdfb74f2bf8affe1de45cbd4cd13b6e7ee65e28a1a266de14a7a9b85b60b71",
+    "data/common_factor_aggregate_development.csv.gz": "d2915df055727a817a1885dbf589f532e1611dc31196272de97c9717769a9ebc"
+  },
+  "decomposition_sha256": "8057b28827de4cd246dc610d19e865952790e7c807b03b5bda9635a2681176df"
+}
