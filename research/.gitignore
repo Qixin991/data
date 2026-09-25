@@ -20,3 +20,4 @@ results/**/*.pth
 # Reproducible row-level prediction outputs
 results/**/*_predictions.csv
 results/**/validation_predictions.csv
+data/**/*.csv.gz

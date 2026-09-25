@@ -1,0 +1,32 @@
+{
+  "completed_utc": "2026-09-25T17:03:24.452115+00:00",
+  "model_checkpoints": 12,
+  "new_fits_this_run": 12,
+  "reused_A_predictions": 6,
+  "reused_reference_predictions": 6,
+  "preserved_inputs_sha256": {
+    "data/features_lag0_L8.csv.gz": "01e2961df48bf54862c4290997be746f2213638a5bf469b29c97fe5c4483d309",
+    "data/trade_arrays.npz": "2acdfb74f2bf8affe1de45cbd4cd13b6e7ee65e28a1a266de14a7a9b85b60b71",
+    "data/common_factor_aggregate_development.csv.gz": "d2915df055727a817a1885dbf589f532e1611dc31196272de97c9717769a9ebc",
+    "results/diagnosis/trees_threads4/seedcheck_D3_42.csv": "ee09098d5e77161bcec809de9d9f69a04591f9589046a0ec71ee01afb026b292",
+    "results/diagnosis/trees_threads4/seedcheck_D5_42.csv": "6fcb7819bc36d0be5f75e541ed2bc9f54d1972153121ef0573039e074b680ed5",
+    "results/common_factor_aggregate_v1/aggregate_no_rel_42_predictions.csv": "336dbd12f29ad62456a351e2935d12cc4fbb0f9b82d2bbed1355b987912fd297",
+    "results/common_factor_aggregate_v1/aggregate_rel_42_predictions.csv": "c5015ddc1604f6a4422a5391823c3050945f7ec96d26d5f76620b774a5245e50",
+    "results/diagnosis/trees_threads4/seedcheck_D3_2024.csv": "fd7573153bb1a5fb1b800123fbfae9fd3d861092e706de134006cf2525a31363",
+    "results/diagnosis/trees_threads4/seedcheck_D5_2024.csv": "b8e27c4f72d8ce99bfed7b9ec54bdf067520b0eed06f42194fcc41e36ea82300",
+    "results/common_factor_aggregate_v1/aggregate_no_rel_2024_predictions.csv": "df00f306e6c6e7459cc4792adbae5da84228f65a90c18f28f0b7f81d43684726",
+    "results/common_factor_aggregate_v1/aggregate_rel_2024_predictions.csv": "2cc11adbce20b2f3ad6521fcca48edea915a4c727d514a8112ce45493b3a4033",
+    "results/diagnosis/trees_threads4/seedcheck_D3_2026.csv": "e674358bc3a0499098e6d8b1c974b87d68b8d6ace370c1a879ae69ff89bc7795",
+    "results/diagnosis/trees_threads4/seedcheck_D5_2026.csv": "bdcdafc302b38dd30f07717f4e0efd926ab5ae16e6f70293cd6234a03a26025f",
+    "results/common_factor_aggregate_v1/aggregate_no_rel_2026_predictions.csv": "ebcc2feabdf5c928b80d547f3efe697771d25b9c98ecea6c6c3ab6da9a385ec6",
+    "results/common_factor_aggregate_v1/aggregate_rel_2026_predictions.csv": "3654e4a4cf12852324c4d176fb91a367f411fcf5cda5b4b9f97328668de63446"
+  },
+  "git_index_unchanged": true,
+  "git_commit_executed": false,
+  "final_holdout_evaluated": false,
+  "hyperparameter_search": false,
+  "code_sha256": {
+    "decompose_relation_risk.py": "0c4f426b2d8eac82f733bdf55ba157018f5577c24cd45b596c83cfce7b644bbe",
+    "experiment_relation_attribution.py": "1250253070bc0d7a63507aeddea76b6891a069091023029c6ac3d3dd1f56efeb"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "source_feature_sha256": "01e2961df48bf54862c4290997be746f2213638a5bf469b29c97fe5c4483d309",
+  "candidate_sha256": "8057b28827de4cd246dc610d19e865952790e7c807b03b5bda9635a2681176df",
+  "rows": 18813,
+  "sample_years": [
+    2007,
+    2018
+  ],
+  "window": 8,
+  "pairwise_minimum": 6,
+  "checks": "explicit shared-year pair arithmetic, old portfolio/joint frequency reconciliation, both decompositions, bounds passed",
+  "missing_counts": {
+    "t": 0,
+    "i": 0,
+    "k4": 0,
+    "diag_portfolio_variance": 0,
+    "offdiag_portfolio_variance": 0,
+    "independent_joint_down": 3,
+    "excess_joint_down": 3,
+    "check_portfolio_variance": 0,
+    "check_joint_down_frequency": 3
+  },
+  "limitation": "Ledoit-Wolf diagonal uses joint shrinkage estimation; B is not an estimator entirely independent of cross-market information. Pairwise frequencies also condition on common observed years.",
+  "final_holdout_evaluated": false
+}
