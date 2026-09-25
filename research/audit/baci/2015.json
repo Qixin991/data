@@ -1,0 +1,19 @@
+{
+  "year": 2015,
+  "source_crc": 1076951726,
+  "source_bytes": 341652834,
+  "script_sha256": "ebc0643212960baa402ee9260431cbfd9047283c06e81ed7fa33907af74706ec",
+  "rows": 10499686,
+  "value_kusd": 16050404527.567001,
+  "q_missing": 280396,
+  "q_zero": 0,
+  "q_negative": 0,
+  "self_trade": 0,
+  "exporters": 226,
+  "importers": 226,
+  "hs84_85_hs4_rows": 807443,
+  "hs84_85_value_kusd": 4155584001.601,
+  "duplicate_keys": 0,
+  "crc_checked": true,
+  "seconds": 34.86
+}

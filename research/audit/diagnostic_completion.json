@@ -1,0 +1,11 @@
+{
+  "feature_sha256": "01e2961df48bf54862c4290997be746f2213638a5bf469b29c97fe5c4483d309",
+  "relation_rows": 18813,
+  "graph_models": 12,
+  "validation_sample_years": [
+    2016,
+    2017,
+    2018
+  ],
+  "final_holdout_evaluated": false
+}

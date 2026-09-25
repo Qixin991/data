@@ -1,0 +1,6 @@
+{
+  "epoch": 10,
+  "mean_validation_ap": 0.43098256905886845,
+  "trainable_parameters": 7329,
+  "property_checks_passed": true
+}

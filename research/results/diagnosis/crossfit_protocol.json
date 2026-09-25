@@ -1,0 +1,17 @@
+{
+  "parameters": {
+    "max_depth": 3,
+    "n_estimators": 150
+  },
+  "training_origins": [
+    2010,
+    2011,
+    2012,
+    2013,
+    2014,
+    2015
+  ],
+  "rule": "origin t uses samples through t-1 (outcomes through t); preprocessing also fit strictly earlier",
+  "caveat": "fixed parameters selected in prior development validation; this is OOF residual training, not a claim that these parameters were chosen in real time",
+  "validation_base": "existing B3 trained 2007-2015; no validation labels in model fit"
+}

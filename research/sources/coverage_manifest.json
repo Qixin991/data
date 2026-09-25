@@ -1,0 +1,266 @@
+[
+  {
+    "file": "baci_webpage.html",
+    "url": "https://www.cepii.fr/DATA_DOWNLOAD/baci/doc/baci_webpage.html",
+    "utc": "2026-09-25T03:21:33.657178+00:00",
+    "http_status": "cached",
+    "bytes": 2092737,
+    "sha256": "aeb2934ae19969cb17146723ec918155a20e8b113af4754f4e48132a9dff1311"
+  },
+  {
+    "file": "baci_release_notes_202601.pdf",
+    "url": "https://www.cepii.fr/DATA_DOWNLOAD/baci/doc/release_notes_202601.pdf",
+    "utc": "2026-09-25T03:21:33.662182+00:00",
+    "http_status": "cached",
+    "bytes": 283163,
+    "sha256": "fcb866fe31f679a7dc92c18eba72989ec1ef03febcfedf36463d91adb72b7250"
+  },
+  {
+    "file": "comtrade_availability_2024_probe.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2024&reporterCode=156",
+    "utc": "2026-09-25T03:21:33.665183+00:00",
+    "http_status": "cached",
+    "bytes": 596,
+    "sha256": "353975e2f9a9bee54d9aae0f2e177321f8362ce7bca89f649d56dae21c6f1ba8"
+  },
+  {
+    "file": "comtrade_availability_1995.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=1995",
+    "utc": "2026-09-25T03:21:36.216392+00:00",
+    "http_status": 200,
+    "bytes": 61659,
+    "sha256": "8c35f36c2303bb6aa2afe662ac719a0ee1bbd65531b7adb7a1210dc63eb8a50f"
+  },
+  {
+    "file": "comtrade_availability_1996.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=1996",
+    "utc": "2026-09-25T03:21:38.825631+00:00",
+    "http_status": 200,
+    "bytes": 66930,
+    "sha256": "ebc710007882475dc2ab9ae45f5eb1af492d98282d442f56ad12b40c6c1e3909"
+  },
+  {
+    "file": "comtrade_availability_1997.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=1997",
+    "utc": "2026-09-25T03:21:40.945679+00:00",
+    "http_status": 200,
+    "bytes": 72709,
+    "sha256": "cdc7b6034d9238c34f2c7f571be4c39503a6932e704bf10a0de650a4dcf9c5f3"
+  },
+  {
+    "file": "comtrade_availability_1998.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=1998",
+    "utc": "2026-09-25T03:21:43.085108+00:00",
+    "http_status": 200,
+    "bytes": 72681,
+    "sha256": "27c1409913975555ce5b9f051c1ceb1320221566925dff00b09e641079c8f045"
+  },
+  {
+    "file": "comtrade_availability_1999.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=1999",
+    "utc": "2026-09-25T03:21:45.175672+00:00",
+    "http_status": 200,
+    "bytes": 78522,
+    "sha256": "96e39a1835fd3cebcd27116fde61e7df45baf58401de3f3c00e69aefa4e0a1a2"
+  },
+  {
+    "file": "comtrade_availability_2000.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2000",
+    "utc": "2026-09-25T03:21:47.225843+00:00",
+    "http_status": 200,
+    "bytes": 89969,
+    "sha256": "994de4896ec6df5bbfab0d3153e00754dec9df5ed01b8be75a07a4179f4a19c6"
+  },
+  {
+    "file": "comtrade_availability_2001.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2001",
+    "utc": "2026-09-25T03:21:49.318818+00:00",
+    "http_status": 200,
+    "bytes": 90482,
+    "sha256": "65b8c67da891996ba59145423c86411b9d133a0fa871edabf71c565926b309a5"
+  },
+  {
+    "file": "comtrade_availability_2002.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2002",
+    "utc": "2026-09-25T03:21:51.455784+00:00",
+    "http_status": 200,
+    "bytes": 91693,
+    "sha256": "2933cc2c3563aa9e580f32880d2dce2127402e89b3bfa1c45239ded68fb29610"
+  },
+  {
+    "file": "comtrade_availability_2003.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2003",
+    "utc": "2026-09-25T03:21:53.434112+00:00",
+    "http_status": 200,
+    "bytes": 92832,
+    "sha256": "fd82f471fba669419377758097de93dd2e87a4304a23d776018a562d079931b9"
+  },
+  {
+    "file": "comtrade_availability_2004.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2004",
+    "utc": "2026-09-25T03:21:55.457346+00:00",
+    "http_status": 200,
+    "bytes": 94904,
+    "sha256": "e63e264cc3a58c29824d06bbef75499a8040aa4356cc20c4da55663379d26566"
+  },
+  {
+    "file": "comtrade_availability_2005.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2005",
+    "utc": "2026-09-25T03:21:57.390938+00:00",
+    "http_status": 200,
+    "bytes": 94239,
+    "sha256": "78a9a09c99a10628d8b9083ec200a5d9229bcf935e8273c87ecdda3121086444"
+  },
+  {
+    "file": "comtrade_availability_2006.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2006",
+    "utc": "2026-09-25T03:22:01.016917+00:00",
+    "http_status": 200,
+    "bytes": 95973,
+    "sha256": "20cf9354085a589bc955ad7fddefc7b05c8b255756b8b2d656c52acd153cadf1"
+  },
+  {
+    "file": "comtrade_availability_2007.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2007",
+    "utc": "2026-09-25T03:22:03.215643+00:00",
+    "http_status": 200,
+    "bytes": 97119,
+    "sha256": "bfb002365f8897fecad9e39d62715d208a3791ef2ae4a01b908c0f88f96988ad"
+  },
+  {
+    "file": "comtrade_availability_2008.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2008",
+    "utc": "2026-09-25T03:22:06.066534+00:00",
+    "http_status": 200,
+    "bytes": 95967,
+    "sha256": "6fbce3457468af94bbf2d7c7e032b7ffa66f1cf459bb8209ea6c3f31d39a38f2"
+  },
+  {
+    "file": "comtrade_availability_2009.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2009",
+    "utc": "2026-09-25T03:22:09.028137+00:00",
+    "http_status": 200,
+    "bytes": 96011,
+    "sha256": "06172799adaee8b3003a532f3e706b0df9c0f7c7352beddf7e44dac2997087c5"
+  },
+  {
+    "file": "comtrade_availability_2010.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2010",
+    "utc": "2026-09-25T03:22:11.039332+00:00",
+    "http_status": 200,
+    "bytes": 97021,
+    "sha256": "9b17e08305308b3b62e251e9897fa0f9c05e2383bbb8ad8d7b86ff021b2b5fa3"
+  },
+  {
+    "file": "comtrade_availability_2011.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2011",
+    "utc": "2026-09-25T03:22:13.560329+00:00",
+    "http_status": 200,
+    "bytes": 95920,
+    "sha256": "30c2265e3f82688869129c120dbeec682537ea2b3ab975cf0b60a73035885c41"
+  },
+  {
+    "file": "comtrade_availability_2012.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2012",
+    "utc": "2026-09-25T03:22:15.478675+00:00",
+    "http_status": 200,
+    "bytes": 94234,
+    "sha256": "449baa89ebd5f7c2d585001fea0f8af91fc20bcac36ff565449b9b2486986b8d"
+  },
+  {
+    "file": "comtrade_availability_2013.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2013",
+    "utc": "2026-09-25T03:22:17.411935+00:00",
+    "http_status": 200,
+    "bytes": 95861,
+    "sha256": "35907bbf56dc462a1ffeec5ed5227cfc268eda8f2853b3637d0e8d2b0860b2b0"
+  },
+  {
+    "file": "comtrade_availability_2014.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2014",
+    "utc": "2026-09-25T03:22:19.482689+00:00",
+    "http_status": 200,
+    "bytes": 94316,
+    "sha256": "8fdcc0d7b35d3c0fcc17690acd616e0d9391626da45a17cdf2e22eaf5145c82c"
+  },
+  {
+    "file": "comtrade_availability_2015.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2015",
+    "utc": "2026-09-25T03:22:21.461860+00:00",
+    "http_status": 200,
+    "bytes": 95906,
+    "sha256": "ef60003ef5968ce5bef87fc8a877617cf644dd0eb00ab14cd4fb679ac3288f07"
+  },
+  {
+    "file": "comtrade_availability_2016.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2016",
+    "utc": "2026-09-25T03:22:23.438808+00:00",
+    "http_status": 200,
+    "bytes": 96971,
+    "sha256": "9eb227c7a7d3560cea7936410289b2afa542fc9496ec38acb668fef1df898afd"
+  },
+  {
+    "file": "comtrade_availability_2017.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2017",
+    "utc": "2026-09-25T03:22:25.398775+00:00",
+    "http_status": 200,
+    "bytes": 98611,
+    "sha256": "63a7d6bf375092585bbb73b5e240217c5d027c23b580e3a3a7f730426bea0172"
+  },
+  {
+    "file": "comtrade_availability_2018.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2018",
+    "utc": "2026-09-25T03:22:27.354538+00:00",
+    "http_status": 200,
+    "bytes": 96877,
+    "sha256": "e11bce1befb7b84043fe0b0c414c22fecdd7872074b32ee0a624b047a13d3c1d"
+  },
+  {
+    "file": "comtrade_availability_2019.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2019",
+    "utc": "2026-09-25T03:22:29.499327+00:00",
+    "http_status": 200,
+    "bytes": 93675,
+    "sha256": "1f62a282da8f580053a47a1d49c8afaca0475cc9676d72feea15278e4ef6319f"
+  },
+  {
+    "file": "comtrade_availability_2020.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2020",
+    "utc": "2026-09-25T03:22:31.735626+00:00",
+    "http_status": 200,
+    "bytes": 92149,
+    "sha256": "d88c5fad200ade57a1f351ddeaaccd82887664afa57225f9ef06bda7eb8f028d"
+  },
+  {
+    "file": "comtrade_availability_2021.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2021",
+    "utc": "2026-09-25T03:22:33.833409+00:00",
+    "http_status": 200,
+    "bytes": 92647,
+    "sha256": "2f2f23a978ee9584c00e1c645890dae2e834779a84118d5fc43ce852c5fe6fa1"
+  },
+  {
+    "file": "comtrade_availability_2022.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2022",
+    "utc": "2026-09-25T03:22:35.995558+00:00",
+    "http_status": 200,
+    "bytes": 91015,
+    "sha256": "2d7a0f9c73f665d84e425bd30e5628bba0b80e07b2393e354f8526a4a3626d36"
+  },
+  {
+    "file": "comtrade_availability_2023.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2023",
+    "utc": "2026-09-25T03:22:37.965262+00:00",
+    "http_status": 200,
+    "bytes": 90489,
+    "sha256": "9b64b810d117ffd6fb7d5f515d02cb7200afaeaa5cb7267c591772fb98aae053"
+  },
+  {
+    "file": "comtrade_availability_2024.json",
+    "url": "https://comtradeapi.un.org/public/v1/getDA/C/A/HS?period=2024",
+    "utc": "2026-09-25T03:22:39.970914+00:00",
+    "http_status": 200,
+    "bytes": 76453,
+    "sha256": "262f61e5ac4d9e959db0ed8650391454a2e41bb57deaf201cb01aade878aee2b"
+  }
+]

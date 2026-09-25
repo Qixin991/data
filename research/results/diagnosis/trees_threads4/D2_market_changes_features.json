@@ -1,0 +1,31 @@
+{
+  "numeric_features": [
+    "log_export",
+    "growth_1",
+    "growth_mean3",
+    "growth_mean5",
+    "growth_sd3",
+    "growth_sd5",
+    "graph_coverage",
+    "destination_gdp_growth",
+    "destination_gdp_growth_coverage",
+    "destination_log_gdp",
+    "destination_log_gdp_coverage",
+    "destination_inflation",
+    "destination_inflation_coverage",
+    "n_dest",
+    "hhi",
+    "top_share",
+    "market_change",
+    "market_history_mean",
+    "market_feature_coverage"
+  ],
+  "identity_features": [
+    "i",
+    "k4"
+  ],
+  "parameters": {
+    "max_depth": 4,
+    "n_estimators": 150
+  }
+}

@@ -1,0 +1,923 @@
+PAGE 1
+Detection, Attribution, Narration: An End-to-End Pipeline for
+Explainable Money Mule Identification
+Yuge Zhang
+yugezhang@ocbc.com
+OCBC, Singapore
+Yuanxing Zhang
+yuanxingzhang@ocbc.com
+OCBC, Singapore
+Yichao Jin
+jinyichao@ocbc.com
+OCBC, Singapore
+Khairul Amsyar Mohd
+Razis
+khairulmohdrazis@ocbc.com
+OCBC, Singapore
+Nicholas Qi An Choo
+nicholaschoo3@ocbc.com
+OCBC, Singapore
+Kai Yin Anders Wong
+anderswong@ocbc.com
+OCBC, Singapore
+Xinyan Tang
+tangxy@ocbc.com
+OCBC, Singapore
+Kenneth Zhu Ke
+kennethzhu@ocbc.com
+OCBC, Singapore
+Wee Keong Dennis Lee
+dennislee@ocbc.com
+OCBC, Singapore
+Jingyuan Zhao
+jingyuanzhao@ocbc.com
+OCBC, Singapore
+Abstract
+Money mule accounts are critical facilitators of financial fraud, yet
+detecting them at scale remains challenging due to the heteroge-
+neous nature of transactional and behavioural data. We present an
+end-to-end pipeline for customer-level mule detection comprising
+three stages: (1) a LightGBM classifier trained on 280 engineered
+features spanning transaction patterns, account demographics, net-
+work topology, and temporal behaviour; (2) a TreeSHAP attribution
+layer that decomposes each prediction into feature contributions;
+and (3) a large language model (LLM) module that converts SHAP
+attributions into analyst-facing natural-language narratives. We
+evaluate across three open-weight LLM families and assess ex-
+planation quality through analyst feedback. In a live production
+deployment, the system achieves a yield rate of 89%, up from 61%
+under the incumbent rule-based system, with monthly alert vol-
+ume expanding from 211 to 302, reflecting broader true-positive
+coverage rather than increased noise. This corresponds to a 60%
+incremental adverse detection beyond existing review workflows,
+substantially outperforming the rule-based approach. Qualitative
+feedback from analysts indicates that LLM-generated narratives
+reduce cognitive load during alert triage. We further discuss impli-
+cations of deploying LLM-augmented explainability in regulated
+financial environments.
+1 Introduction
+Money mules, which are usually individual bank accounts involved
+in laundering the proceeds of fraud, represent one of the most
+prevalent drivers in the financial crime ecosystem. Mule accounts
+receive illicit funds from victims and rapidly disperse them onward,
+often across jurisdictions, making recovery difficult and enabling
+Permission to make digital or hard copies of all or part of this work for personal or
+classroom use is granted without fee provided that copies are not made or distributed
+for profit or commercial advantage and that copies bear this notice and the full citation
+on the first page. Copyrights for components of this work owned by others than the
+author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or
+republish, to post on servers or to redistribute to lists, requires prior specific permission
+and/or a fee. Request permissions from permissions@acm.org.
+KDD’26 - MLF workshop, Jeju, Korea
+©2026 Copyright held by the owner/author(s). Publication rights licensed to ACM.
+downstream criminal activity at scale [12]. Despite increasing reg-
+ulatory scrutiny, detection remains difficult because mule accounts
+often mimic legitimate customer behaviour during onboarding and
+early account activity, revealing anomalous patterns only when
+examined across multiple feature dimensions simultaneously.
+A further operational challenge is that detection alone is insuffi-
+cient. In practice, every flagged customer must be reviewed by a
+human analyst before action can be taken. Therefore, the usefulness
+of a detection system depends not only on its precision and recall,
+but also on how quickly and confidently analysts can triage the
+alerts it produces. Thisexplainabilityrequirement is often under-
+weighted in the academic literature, but is critical in production.
+The incumbent approach in most financial institutions relies
+on deterministic threshold-based rules (e.g., more than 𝑁 trans-
+actions to new payees within 𝑇 days). While interpretable, these
+approaches suffer from a well-documented precision-recall trade-
+off. Tightening rules reduces false positives but allows sophisticated
+mules to evade detection, while loosening them overwhelms ana-
+lyst queues with false alerts. The rigidity of static rules also means
+that they cannot adapt to the evolving mule typologies without
+costly, repeated manual recalibration.
+Critically, these rule-based systems usually operate on individual
+features in isolation. Money mule behaviour, however, is inherently
+multi-dimensional, where no single indicator is sufficiently diagnos-
+tic. Instead, it relies heavily on thecombinationof subtle anomalies
+across transaction velocity, network structure, temporal patterns,
+and account demographics. This distinctive signature cannot be
+easily captured by deterministic rules.
+This paper presents an end-to-end pipeline that addresses both
+detection and explainability challenges. Our contributions include
+• High-dimensional ML classifier:A LightGBM model [ 7]
+trained using 280 engineered features for customer-level
+mule detection, with calibration analysis demonstrating reli-
+able probability estimates across score ranges.
+• LLM-augmented explainability:A pipeline that feeds
+SHAP [9] attributions into large language models to gener-
+ate natural-language narratives. We assess output quality
+through analyst feedback.
+arXiv:2607.17586v1  [cs.CR]  20 Jul 2026
+PAGE 2
+KDD’26 - MLF workshop, August 9 - 13, 2026, Jeju, Korea Y. Zhang, Y. Zhang, Y. Jin, K. Razis, N. Choo, K. Wong, X. Tang, K. Zhu, W. Lee, and J. Zhao
+• Live production validation:Deployment in an AML (Anti-
+Money Laundering) production environment achieves a yield
+rate of 89%, up from 61% under the incumbent rule-based
+system. Monthly alert volume expanded from 211 to 302, re-
+flecting broader true-positive coverage rather than increased
+noise. This corresponds to 60% incremental adverse detection
+beyond existing review workflows, with qualitative analyst
+feedback indicating reduced cognitive load during triage
+compared to raw SHAP visualizations.
+• Operational insights:Practical lessons on integrating ML
+and LLM components into analyst workflows within regu-
+lated financial environments, including guardrails against
+LLM hallucination and considerations for model governance.
+2 Related Work
+Our work sits at the intersection of three research streams, in-
+cluding machine learning for financial crime detection, post-hoc
+explainability for high-stakes models, and the emerging use of LLMs
+to translate quantitative explanations into natural language. We
+review each in turn, highlighting the gap our pipeline addresses.
+2.1 Machine Learning for AML Detection
+Machine learning has been applied to fraud and AML detection for
+more than two decades [12], yet work targeting money mule ac-
+counts specifically remains limited. Most published approaches
+frame the problem at the transaction level and rely on graph-
+based methods. Savage et al. [13] used supervised learning in small
+networks grouped by transactional interactions. More recently,
+Jambhrunkar et al. [6] proposed MuleTrack, a Markov-chain-based
+framework for detecting mule accounts in India’s UPI (Unified
+Payments Interface) system. Huang et al. [5] presented the Mule-
+Trace algorithm to locate mule nodes within transaction graphs by
+tracking entire laundering chains.
+While graph-based methods are well-suited to network-level
+detection, they require access to full transaction graphs, which is
+often infeasible in siloed institutional environments. In contrast,
+our approach operates ontabular features engineered at the cus-
+tomer level, requiring only data available within a single institu-
+tion. Gradient boosting methods, particularly LightGBM [7], have
+demonstrated strong performance on tabular financial data. Taha
+and Malebary [14] showed that an optimised LightGBM achieves
+state-of-the-art results on credit card fraud detection. Xu et al. [16]
+proposed deep boosting decision trees that embed neural networks
+into gradient boosting while preserving interpretability. To date,
+gradient boosting approaches remain the dominant approach in
+deployed AML systems, yet published work rarely reports produc-
+tion deployment metrics such as analyst yield rate and increased
+coverage of real-world cases.
+2.2 Explainability in High-Stakes ML
+In regulated financial environments, model transparency is both
+an operational necessity and a compliance requirement. Regula-
+tors, including the United States (US) government [11] and Euro-
+pean Union (EU) [4], increasingly mandate financial institutions to
+demonstrate how model output informs decisions. SHAP (SHapley
+Additive exPlanations) [9] had become the de facto standard for
+local feature attribution, due to its game-theoretic foundations and
+the efficiency of the TreeSHAP algorithm [8] for tree-based models.
+However, a persistent gap exists between what these methods
+produce, mainly numeric feature-contribution vectors, and what
+operational analysts need to act on. Waterfall plots and beeswarm
+diagrams require statistical literacy to interpret and slow down alert
+triage, particularly when analysts must process hundreds of alerts
+per day. Thislast-mile explainability gapis the primary motivation
+for our LLM interpretation module.
+2.3 LLMs as Explanation Narrators
+The use of LLMs to convert quantitative AI model outputs into
+natural language is a rapidly growing research direction. Martens
+et al. [10] demonstrated that LLM-generated narratives from SHAP
+values are found convincing by over 90% of surveyed non-experts
+and help users more accurately summarize AI decisions compared
+to raw SHAP plots alone. Zytek et al. [19] developed Explingo, a
+dual-LLM system comprising a narrator that generates explana-
+tion narratives and an automated grader that evaluates them on
+accuracy, completeness, and fluency. Bello et al. [ 2] presented a
+three-level framework for LLM-enhanced explainable AI, including
+a case study that translates SHAP values from a loan-denial model
+into conversational narratives. Zeng [ 18] further explores using
+LLMs to enhance the interpretability of SHAP values specifically,
+demonstrating that model-generated narratives can surface feature
+interactions that raw attribution plots obscure.
+These works established the feasibility of LLM-based XAI narra-
+tion. However, evaluation to date has focused on narrative quality
+metrics rather than downstream operational impact, and deploy-
+ment constraints such as on-premise hosting for data residency
+have not been highlighted. Our work extends this direction with
+production-validated evidence from a live AML setting using self-
+hosted open-weight models.
+3 Methodology
+3.1 System Overview
+The pipeline executes three modules sequentially for each customer:
+(1) feature engineering and classification, (2) SHAP attribution, and
+(3) LLM interpretation. This is followed by a domain expert work-
+flow for alert triage. Figure 1 presents the end-to-end architecture.
+First, raw data from multiple source systems are transformed into a
+tabular feature matrix at the customer level and scored by a Light-
+GBM classifier. The model outputs are then decomposed via Tree-
+SHAP into per-feature contributions and narrated by self-hosted
+open-weight LLM models into a domain-expert-facing explana-
+tion. Alerts are ranked by predicted probability and surfaced to
+human analysts together with the generated narrative. A feedback
+loop from confirmed dispositions back into the watchlist and label
+pipeline to support periodic model retraining.
+3.2 Data and Feature Engineering
+Data sources.The model ingests data from multiple internal sys-
+tems, including core banking transactions, customer onboarding
+records, device and channel metadata, and internal/external watch-
+list and sanctions feeds.
+PAGE 3
+Detection, Attribution, Narration: An End-to-End Pipeline for Explainable Money Mule Identification KDD’26 - MLF workshop, August 9 - 13, 2026, Jeju, Korea
+Figure 1: End-to-end system architecture for LLM-augmented money mule detection. The pipeline flows from raw data sources
+(left) through feature engineering (280 features), LightGBM classification with TreeSHAP attribution, LLM-based narrative
+generation, and into the domain expert workflow. Dashed line indicates the feedback loop for model retraining.
+The training dataset includes 2,176 customer-level records across
+2,115 unique customers.
+Labels are derived from two primary sources of ground truth. The
+first consists of customers subject to Seizure Orders (SOs) filed by
+police officers under the Criminal Procedure Code (CPC), wherein
+affected customers are assigned a positive label, reflecting a legal
+determination that the funds are suspected proceeds of criminal
+activity. The second source comprises analyst-confirmed money
+mule cases, where customers have been reviewed and adjudicated
+by financial crime investigators. Customers confirmed as mules are
+labeled positive; those cleared are labeled negative.
+In total, 1,680 customers (77.2%) are labeled as mules (positive
+class) and 496 (22.8%) as non-mules (negative class), yielding a
+positive-to-negative ratio of approximately 3.4:1. This distribution
+does not reflect the true population prevalence of money mule
+activity. To better approximate the real-world class distribution, ad-
+ditional negative samples are drawn from the unlabeled population
+and incorporated into the training set, reducing the positive-to-
+negative ratio to 1:5.
+Feature taxonomy.Over 280 features are engineered at the
+customer level and organized into five overlapping feature groups,
+as summarized in Table 1.
+All features are computed over multiple time windows (e.g., 7,
+30, 90, 180 days) to capture both short-term bursts and longer-term
+behavioural drift.
+Features are constructed by aggregating raw transactional and
+relational data at the customer level across multiple lookback win-
+dows of 7, 30, 90, and 180 days. For each window, aggregation
+functions including count, sum, min, max, and standard deviation
+are applied to capture transaction frequency, volume, and disper-
+sion. The diversity of counterparties and channels is measured
+using cardinality counts across unique recipients, senders, coun-
+tries, and transaction channels. Two types of derived ratio features
+are computed, including credit-to-debit ratios for both transaction
+count and transaction value within each look-back window, as well
+as short-to-long-term velocity ratios that contrast 7-day activity
+with a 180-day baseline to identify sudden increases in transactional
+behaviour.
+Missing values in numeric features are imputed with zero, which
+is semantically appropriate as the absence of a transaction record
+implies zero activity. Categorical features retain missing values and
+are handled natively by the model. To prevent division-by-zero
+artefacts in ratio features, zero denominators are substituted with
+a missing indicator prior to computation.
+No explicit post-engineering feature selection procedure, such
+as recursive feature elimination or correlation-based filtering, was
+applied. The full set of 280 engineered features was presented to the
+model, with implicit feature selection performed by the gradient-
+boosted tree algorithm through its split-gain optimisation criterion.
+3.3 LightGBM Classifier
+We use LightGBM [7] for binary classification at the customer level,
+predicting the probability that a customer is operating as a money
+mule. LightGBM is chosen for its efficiency on high-dimensional
+tabular data, native categorical feature handling, and strong empir-
+ical performance in deployed financial systems.
+Class imbalance.Although money mule accounts are rare in the
+real-world population, we apply negative sampling during training
+PAGE 4
+KDD’26 - MLF workshop, August 9 - 13, 2026, Jeju, Korea Y. Zhang, Y. Zhang, Y. Jin, K. Razis, N. Choo, K. Wong, X. Tang, K. Zhu, W. Lee, and J. Zhao
+Table 1: Summary of Feature Groups
+Feature
+Group
+Count Representative Examples
+Transaction
+patterns
+263 Transaction count and amount for all
+(debit and credit), debit, and credit
+transactions; credit-to-debit ratios; pass-
+through frequency and amount; equiva-
+lent statistics for STR (Suspicious Trans-
+action Report)-linked counterparties and
+high/medium-risk geographies
+Account
+demo-
+graphics
+15 Customer tenure, age, country of domicile,
+number of active accounts, recency of ac-
+count opening/closing, number of police
+orders received, and recency of last police
+order
+Network /
+graph
+47 Number and types of C2C relationships,
+number of connected customers with STR
+filings, transaction value linked to net-
+work STRs
+Temporal
+behaviour
+37 Short-term to long-term velocity ratios
+comparing 7-day activity against 180-day
+baseline for all (debit and credit), debit,
+credit, and STR-linked transactions, cap-
+turing sudden spikes in activity
+Device /
+session /
+channel
+16 Number of distinct transaction channels
+used across multiple lookback windows,
+including channel diversity for high-risk
+geography transactions and STR-linked
+entities
+Note:Feature counts sum to more than the total of 280 as certain features span
+multiple groups.
+to construct a dataset with a positive-to-negative ratio of 1:5. This
+introduces an engineered class imbalance in the training set. To
+address this, we use the scale_pos_weight parameter, set to the
+ratio of negative to positive samples in the training data, which
+up-weights the loss contribution of positive examples.
+Hyperparameter tuning.We perform grid search over the
+following hyperparameter space, selecting the configuration that
+maximises AUC-PR on the validation set as shown in table 2.
+Temporal train/test split.To prevent data leakage and simulate
+realistic deployment conditions, we split the data temporally. In
+particular, the model is trained on customers observed before a
+cutoff date and evaluated on customers appearing after that date.
+Calibration.Since the predicted probability directly determines
+alert ranking and analyst workload, well-calibrated scores are es-
+sential. We assess calibration using reliability diagrams and the
+Expected Calibration Error (ECE), and apply Platt scaling where
+necessary. Platt scaling fits a logistic regression on a held-out valida-
+tion set to map raw LightGBM scores to better-aligned probabilities,
+ensuring that a predicted score of 0.8 more faithfully reflects an 80%
+empirical likelihood of money mule behaviour rather than being
+an arbitrary model output.
+3.4 SHAP Attribution Layer
+For each customer selected for explanation—either those exceeding
+the alert threshold or a user-defined top-N set—we compute exact
+SHAP values using TreeSHAP [8], which exploits the tree structure
+of LightGBM for polynomial-time computation. TreeSHAP decom-
+poses the predicted log-odds into additive per-feature contributions,
+satisfying local accuracy, missingness, and consistency axioms [9].
+From the full set of 280 SHAP values per prediction, we select
+thetop 10 features by absolute SHAP magnitudefor down-
+stream LLM interpretation. This selection balances two concerns,
+providing sufficient context for a meaningful narrative while keep-
+ing the prompt concise enough for reliable LLM generation. For
+each selected feature, we extract the feature name, its raw value
+for the account, the SHAP contribution value, and the direction of
+influence (i.e., positive = increased probability of the mule, negative
+= decreased probability).
+3.5 LLM Interpretation Module
+The final stage translates the structured SHAP output into a natural-
+language narrative that analysts can read during alert triage.
+Table 2: Selected Hyperparameters for the Model
+Hyperparameter Selected Value
+num_leaves 31
+max_depth 8
+learning_rate 0.03
+min_child_samples 200
+subsample 0.7
+colsample_bytree 0.7
+reg_alpha 0.1
+reg_lambda 5.0
+Deployment.All LLMs are deployed on-premise on a single
+NVIDIA H100 GPU to ensure that customer data never leaves the
+institution’s infrastructure. We evaluated three models, including
+Gemma-3-27B [15], GPT-OSS-120B [1], and Qwen3-Next-80B-A3B-
+Instruct [17], with one selected for production deployment based
+on the evaluation described below.
+Prompt design.The prompt consists of three elements.
+(1) Prediction context:the customer’s mule probability score
+and the score percentile.
+(2) SHAP evidence:the top-10 feature attributions, each pre-
+sented as a (feature name, feature value, SHAP contribution,
+direction) tuple.
+(3) Instruction template:specifying output structure using
+a fixed JSON schema with red flags, reasons, and evidence
+references; tone (factual, concise); and constraints (cite only
+features present in the SHAP evidence; do not speculate
+beyond the provided data).
+Narrative constraints and review.We constrain LLM-generated
+narratives through the prompt template and periodic human review
+to reduce the risk of unsupported or misleading explanations.
+PAGE 5
+Detection, Attribution, Narration: An End-to-End Pipeline for Explainable Money Mule Identification KDD’26 - MLF workshop, August 9 - 13, 2026, Jeju, Korea
+• Prompt constraints:the prompt instructs the LLM to cite
+only features present in the top-10 SHAP input, avoid spec-
+ulation beyond the provided case data, and structure the
+output using a fixed JSON schema. The prompt also requires
+each red flag to reference the specific feature names support-
+ing the explanation.
+• Human review:domain experts provide periodic feedback
+on narrative quality through a lightweight rating mechanism
+integrated into the alert triage interface, enabling ongoing
+monitoring of explanation fidelity.
+4 Experiments and Results
+4.1 Experimental Setup
+Temporal split.The dataset is divided by a temporal cutoff. Ac-
+counts observed before the cutoff form the training and validation
+sets, and accounts appearing only after the cutoff date form the
+held-out test set.
+The dataset is split chronologically into training, validation, and
+test sets to prevent data leakage. The model is trained on data from
+January 2025 up to eight weeks before each test period. The eight
+weeks immediately preceding the test period serve as the validation
+set to monitor model performance. Testing is conducted over four
+consecutive weekly periods in December 2025.
+Evaluation metrics.We report standard classification metrics
+where available, including precision, recall, F1-score, and AUC-PR,
+on the held-out test set. However, the primary metric for evaluating
+operational impact isyield rate, defined as
+Yield Rate= Alerts confirmed as true mules
+Total alerts reviewed by analysts (1)
+The yield rate is measured on live production alerts rather than
+the held-out test set, reflecting the end-to-end effectiveness of the
+system, including the analyst-in-the-loop decision process. This
+metric directly captures what matters operationally: how often an
+analyst’s time spent reviewing an alert leads to a confirmed case.
+Baseline.We compare against the incumbent rule-based de-
+tection system that was in production prior to our pipeline. The
+rule-based system uses deterministic thresholds on individual trans-
+action features (e.g., transaction velocity, counterparty count, in/out
+ratios) to flag suspicious accounts. This represents the realistic pro-
+duction baseline rather than an academic benchmark.
+4.2 Classification Performance
+Table 3 summarises the available classification metrics for the Light-
+GBM model on the held-out test set.
+Threshold selection and model performance.Each week,
+the model scores between 20,000 and 30,000 cases, of which analysts
+can investigate approximately 100. The operating threshold of 0.8
+was selected as the F1-optimal cut-off, meaning it is the score above
+which the balance between precision and recall is maximised. This
+threshold determines which cases are surfaced as alerts from the
+full scored population, reducing tens of thousands of cases to a
+queue that fits within analyst capacity.
+Precision-recall trade-off.At threshold 0.8, the model achieves
+a mean precision of 0.909 and a mean recall of 0.816 across the four
+December 2025 backtesting weeks. The high precision means that
+Table 3: LightGBM model performance on the held-out test
+set. Precision, recall, and F1-score are reported at the opera-
+tional threshold of 0.8.
+Metric Value
+Precision 0.909
+Recall 0.816
+F1-Score 0.860
+AUC-ROC 0.824
+AUC-PR 0.943
+Log-Loss 0.450
+approximately 9 in 10 cases flagged to analysts are genuine money
+mules, keeping the workload focused and efficient. The recall of
+0.816 reflects the inherent cost of setting a high threshold: roughly 1
+in 5 true money mule cases score below 0.8 and are not immediately
+escalated. This trade-off is a deliberate design choice. Setting the
+threshold lower would recover more true cases but would also
+push the weekly alert volumes beyond what analysts can handle,
+diluting the quality of reviews. The F1 score of 0.860 at this threshold
+represents the best achievable balance between detection coverage
+and operational precision given the analyst capacity constraint.
+It is important to note that the backtesting evaluation was con-
+ducted on the reviewed cases available from that a subset period of
+the full weekly population. This could be interpreted as an estimate
+of model performance rather than a count of production alerts.
+Beyond the backtesting evaluation, the model’s real-world effec-
+tiveness is validated through the yield rate. Over the four weeks
+of December 2025, analysts reviewed 100 model-selected cases per
+week. Of these, 89% were confirmed as true money mules, yielding
+a production precision that directly reflects how useful the model’s
+prioritisation is in practice.
+The yield rate of 89% means that analysts spent the vast majority
+of their review capacity on genuine cases, with fewer than 11 in
+every 100 alerts turning out to be false escalations. This level of
+precision is operationally meaningful in a context where analyst
+time is the binding constraint. A high yield rate ensures that the 100-
+case weekly capacity is not diluted by noise, allowing investigators
+to focus their effort on the highest-risk cases.
+Calibration.The LightGBM model outputs raw probability
+scores that were subsequently adjusted using Platt scaling, which
+is a post-hoc calibration technique that fits a logistic regression on
+a held-out calibration validation set to map raw model scores to
+better-aligned probabilities. This ensures that a predicted score of
+0.8 more faithfully reflects an empirical probability of 80% of money
+mule behaviour, rather than being an arbitrary model output.
+Calibration quality is assessed using the Expected Calibration
+Error (ECE), which measures the weighted average gap between
+predicted scores and observed positive rates across score bins. The
+combined ECE across all four December 2025 backtesting weeks is
+0.079, indicating acceptable calibration overall.
+Figure 2 illustrates the reliability diagram of the model. In the
+high-score region (score≥ 0.8), where the operating threshold sits at
+0.8, the model curve closely tracks the perfect calibration diagonal,
+with an ECE of 0.021. The zigzag pattern in the lower score range
+PAGE 6
+KDD’26 - MLF workshop, August 9 - 13, 2026, Jeju, Korea Y. Zhang, Y. Zhang, Y. Jin, K. Razis, N. Choo, K. Wong, X. Tang, K. Zhu, W. Lee, and J. Zhao
+Figure 2: Reliability diagram for the LightGBM + Platt-scaled
+model across four December 2025 backtesting weeks (com-
+bined). The dashed line represents perfect calibration. The
+shaded region (score < 0.8) contains sparse labelled bins and
+is excluded from calibration interpretation. The operating
+threshold is set at 0.8. Sample sizes per bin are annotated
+for the high-score region (score ≥ 0.8). ECE ( ≥ 0.8) = 0.021;
+combined ECE (all bins)=0.079.
+attributes to small bin sample sizes (𝑛≤ 8) rather than systematic
+miscalibration, and falls outside the operationally relevant score
+range. The 𝑛= 102bin at score ≈ 0.97, representing the largest and
+most reliable sample. This aligns closely with the diagonal, further
+supporting calibration quality at the decision boundary.
+4.3 Feature Importance
+We use mean absolute SHAP values across the test set to assess
+global feature importance. Figure 3 presents a beeswarm plot of
+the top 15 features ranked by mean |SHAP|, pooled across 400
+scored customers from the four December 2025 backtesting weeks,
+collectively accounting for approximately 46% of the total mean
+absolute SHAP mass across all 280 features.
+The analysis reveals two dominant feature groups. Account de-
+mographic features occupy the top three positions, collectively
+accounting for 19.5% of total mean absolute SHAP mass. The top-
+ranked feature is days_since_birth (mean |SHAP|= 1.31), then
+account_open_num (1.21) andaccount_open_days_since_latest
+(0.81). Directionally, higher values of days_since_birth are as-
+sociated with increased risk, indicating that older customers are
+disproportionately flagged, potentially reflecting greater vulnera-
+bility to recruitment as money mules. account_open_num exhibits
+a bimodal distribution, where both very low and very high values
+push predictions toward higher risk, suggesting that newly created
+single-account holders and accounts with an unusually large num-
+ber of linked accounts are flagged. Transaction pattern features
+(ranks 4-15) contribute a further 26.5%, with credit-to-debit ratio
+features across multiple lookback windows (7, 30, 90, and 180 days)
+and minimum credit amount features emerging as the most discrim-
+inative among them. Notably, lower transaction activity and lower
+credit amounts consistently shift SHAP values negative, implying
+Figure 3: SHAP beeswarm plot of the top 15 features by mean
+|SHAP| value. Each point represents one of the 400 scored
+customers pooled across four December 2025 backtesting
+weeks (W1-W4). Features are ordered top-to-bottom by de-
+creasing mean absolute SHAP value. Point colour encodes
+the direction of each feature’s contribution. Red indicates
+the feature value pushes the model prediction toward higher
+risk, while blue indicates a risk-reducing effect. The 𝑥-axis
+represents the SHAP value, with positive values increasing
+predicted risk and negative values decreasing it. Features are
+grouped into Account demographics (top 3) and Transaction
+patterns (ranks 4-15).
+that financially inactive accounts are a stronger mule signal than
+volume-driven behaviour. Although multiple ratio features share
+similar lookback windows and may exhibit collinearity, SHAP val-
+ues are computed on model output directly and thus reflect marginal
+contribution after all feature interactions are accounted for.
+4.4 LLM Explanation Evaluation
+We evaluated three open-weight LLM families, GPT-OSS-120B,
+Qwen3-Next-80B-A3B, and Gemma-3-27B, on 20 confirmed money-
+mule alerts under the production prompt template (Appendix A).
+Each output was scored on a 1-5 scale (higher is better) across four
+dimensions by blinded independent evaluators:
+• Factual accuracy:numeric values, percentile claims, and
+feature descriptions are faithful to the case input; every cited
+feature resolves to one present in the top-10 SHAP evidence;
+no fabricated SHAP values.
+• Typology plausibility:each flag maps a real data pattern
+to a recognised mule typology such as pass-through, veloc-
+ity spikes, credit-to-debit imbalance, high activity in new
+accounts, counterparty diversity, or dormant reactivation.
+• Completeness:coverage of the material signals, especially
+raw feature value exceeds 90th percentile of the training pop-
+ulation, that an analyst would expect to see in the narrative.
+PAGE 7
+Detection, Attribution, Narration: An End-to-End Pipeline for Explainable Money Mule Identification KDD’26 - MLF workshop, August 9 - 13, 2026, Jeju, Korea
+Table 4: LLM model comparison on 20 confirmed money-mule alerts. Rubric dimensions are 1-5 mean scores (higher is better);
+latency is the mean wall-clock inference time per alert on the same single-H100 on-premise deployment.
+Model Factual Accuracy Typology Plausibility Completeness Actionability Latency (s/alert)
+GPT-OSS-120B 4.20 3.50 2.90 3.35 5.7
+Qwen3-Next-80B-A3B 3.65 3.35 3.30 3.35 20.2
+Gemma-3-27B 2.55 2.75 2.80 2.60 40.4
+• Actionability:flags are distinct, data-anchored, and suitable
+for direct use in analyst alert write-up without rewording.
+Latency was measured separately as the mean wall-clock infer-
+ence time per alert on the single-H100 on-premise deployment.
+Table 4 summarises the results.
+GPT-OSS-120B was selected for production. It has the highest
+score for factual accuracy (4.20 vs. 3.65 and 2.55) and typology
+plausibility, an equal score on actionability with Qwen, and is the
+fastest of the three by 3-7× despite having the largest parameter
+count. Two factors explain the speed. First, GPT-OSS and Qwen use
+a mixture-of-experts architecture that activates only a fraction of
+their parameters per token, while Gemma uses its full 27B parame-
+ters at every step. Second, GPT-OSS produces shorter responses on
+average, with 2.80 red flags per case versus 3.35 for Qwen and 3.55
+for Gemma, so fewer tokens are streamed per alert.
+Qwen3-Next-80B-A3B is still a viable fallback. It scores highest
+on completeness by surfacing more red flags per case, but its factual
+accuracy is lower. It is more prone to SHAP-value fabrication and
+percentile-claim errors. Gemma-3-27B was ruled out because its
+factual accuracy and its ∼40 s per-alert latency is uneconomical at
+operational volumes. Across all three models, the most common
+failure modes are exaggerated SHAP-value reporting, including
+occasional 10× magnitude errors, and misinterpretation of credit-to-
+debit ratio semantics. These observations motivated stricter prompt
+constraints and periodic human review of generated narratives.
+4.5 Production Deployment and Yield Rate
+The complete pipeline has been deployed in a production AML
+environment for 1 month, with alerts surfaced to a team of 3 three
+full-time analysts. Table 5 compares the operational performance
+of the proposed pipeline against the incumbent rule-based system,
+which consists of 5 reports focused on identifying likely bad-actors
+based on customer profile, non-financial and financial transaction
+activity, and financial transaction network behaviour. The rule-
+based metrics are blended across all 5 reports.
+Table 5: Operational comparison: proposed pipeline vs. in-
+cumbent rule-based system (metrics blended across 5 reports)
+on live production alerts.
+Metric Rule-Based
+(blended across 5 reports)
+Proposed
+Yield Rate 61% 89%
+Monthly Alert Volume 211 302
+The yield rate improvement from 61% to over 89% represents a
+substantial reduction in false positives surfaced to analysts, allow-
+ing the team to focus investigative effort on genuinely suspicious
+accounts. The concurrent rise in monthly alert volume from 211 to
+302 reflects broader coverage rather than noise. This indicates that
+the model surfaces more true positives that the rule-based system
+had previously missed, without proportionally increasing analyst
+burden given the higher yield.
+Analyst feedback on LLM narratives.Appendix B shows two
+representative LLM outputs alongside the analyst verdicts they
+received. Through structured feedback sessions, analysts reported
+that LLM-generated narratives meaningfully reduced the cognitive
+effort required during alert triage. Specifically, analysts noted that
+narratives allowed them to quickly assess whether a prediction was
+plausible before committing to a full investigation, and that the
+structured format (red flags, supporting reasons, and evidence ref-
+erences) aligned well with their existing workflow. Representative
+analyst feedback highlighted two particularly valued capabilities.
+First, analysts noted that the narratives“provide clear guidance into
+why an alert is classified as higher risk rather than typical customer
+behaviour and draw attention to specific non-financial red flags that
+we may not typically monitor. ”Second, analysts identified a proac-
+tive monitoring use case: the LLM“has the capability to help filter
+higher-risk alerts with low transaction values”, cases where suspi-
+cious behavioural signals are present but adverse transactions have
+not yet materialised. Rather than dismissing these as low-priority,
+analysts noted that such alerts can be placed under short-term
+internal monitoring (typically a few weeks), as flagged accounts
+frequently exhibit adverse activity within that window. This sug-
+gests the system supports not only point-in-time triage but also
+early-warning identification of emerging money mule activity.
+5 Discussion
+5.1 Why ML Outperforms Rules
+The improvement in yield rate from 61% to over 89% reflects a fun-
+damental difference in how the two approaches model the behavior
+of the mule. Rule-based systems operate on individual features in
+isolation: a single rule might flag accounts exceeding a velocity
+threshold, while another targets unusual counterparty counts. Each
+rule captures one behavioural dimension, and combining rules mul-
+tiplicatively creates rigid decision boundaries that are brittle to
+slight variations in mule tactics.
+The LightGBM model, by contrast, learns non-linear interactions
+across hundreds of features simultaneously. Money mule behaviour
+is inherently multi-dimensional, where no single feature is diagnos-
+tic, but the combination of moderate anomalies across transaction
+velocity, temporal patterns, and counterparty diversity creates a
+PAGE 8
+KDD’26 - MLF workshop, August 9 - 13, 2026, Jeju, Korea Y. Zhang, Y. Zhang, Y. Jin, K. Razis, N. Choo, K. Wong, X. Tang, K. Zhu, W. Lee, and J. Zhao
+distinctive signature. Gradient boosting captures these joint effects
+naturally through its sequential tree-building process, without re-
+quiring analysts to manually specify interaction rules.
+A practical consequence is that the ML pipeline also produces
+higher-quality alerts at a greater volume, giving analysts more cases
+to review without sacrificing precision. Critically, when analyst
+capacity increases, the alert volume can be scaled up simply with
+only marginal loss in yield rate. Rule-based systems lack this flexi-
+bility, where tightening one rule often requires loosening another
+to maintain coverage. Consequently, it is difficult to scale detection
+without disproportionately inflating false positives.
+5.2 The Value of LLM-Generated Narratives
+A key observation from deployment is that classification perfor-
+mance alone was insufficient to drive analyst adoption. Early itera-
+tions of the pipeline surfaced SHAP waterfall plots alongside the
+mule probability score, but analyst feedback indicated that inter-
+preting raw feature attributions was time-consuming and required
+familiarity with the model’s feature definitions.
+The addition of LLM-generated narratives changed the interac-
+tion dynamic. Rather than synthesising meaning from a bar chart
+of 10 numeric values, analysts could read a concise summary that
+contextualised the risk factors in domain-relevant language (e.g.,
+“a sudden spike in inflows relative to the account’s longer-term
+baseline” rather than “txn_credit_p7d_p180d_ratio_sum: SHAP
+= +0.34”). Analysts reported that this reduced the time to form an
+initial hypothesis about if an alert warranted deeper investigation.
+This finding aligns with recent work on XAI narratives. Cedro
+and Martens [3] found that over 90% of non-experts rated SHAP-
+based narratives as convincing, and Zytek et al. [19] showed user
+preference for LLM narratives over SHAP plots. Our contribution
+extends these findings to a production AML environment, where
+the stakes and the scrutiny are considerably higher.
+5.3 Limitations
+We identify a few limitations of the current work as follows.
+• Single-institution evaluation.All results are from one
+financial institution. Mule typologies, transaction patterns,
+and label distributions vary across geographies and banking
+products, and the pipeline’s performance may not transfer
+directly without retraining and feature adaptation.
+• Label quality.Ground truth is constructed from police force
+filings and human analyst confirmations. Both carry inher-
+ent limitations. Police filings may be filed with a delay, and
+analysts may disagree on borderline cases. Furthermore, un-
+detected mules represent survivorship bias in the negative
+class. The yield rate metric partially mitigates this by measur-
+ing confirmed outcomes, but underlying label noise remains.
+• LLM hallucination residual risk.Despite prompt con-
+straints and periodic human review, LLM-generated nar-
+ratives can occasionally produce plausible-sounding state-
+ments that subtly misrepresent the underlying SHAP evi-
+dence. In a compliance context, even infrequent hallucina-
+tions carry reputational and regulatory risk. Ongoing moni-
+toring and periodic manual audits are essential.
+5.4 Ethical Considerations
+Deploying ML for financial crime detection carries fairness and ac-
+countability risks. The model must not disproportionately flag cus-
+tomers based on protected or sensitive characteristics. The feature
+set excludes gender and ethnicity, but it does include age-related
+and geography-related variables, such as customer age, country
+of domicile, and transaction geographies. These variables may be
+relevant for financial crime risk assessment, but they can also intro-
+duce proxy-discrimination risks. We therefore treat demographic
+and geography-linked features as requiring explicit governance,
+monitoring, and periodic review rather than assuming that their
+inclusion is automatically fair or risk-free.
+The LLM interpretation layer introduces an additional fairness
+and conduct risk. Generated narratives may influence analyst judg-
+ment even when they are intended only as explanatory aids. To
+mitigate this risk, the prompt template constrains the LLM to cite
+only SHAP-supported evidence from the case input and to avoid un-
+supported speculation. In addition, generated narratives are subject
+to periodic human review for factual consistency, discriminatory
+framing, and inappropriate escalation language. The LLM output is
+not treated as an independent basis for adverse action; final deci-
+sions remain with trained financial-crime analysts following the
+institution’s standard review process.
+6 Conclusions
+This paper presents an end-to-end pipeline for money mule detec-
+tion that combines account-level classification, feature attribution,
+and LLM-generated natural-language explanations. A LightGBM
+model trained on 280 engineered features produces calibrated mule
+probability scores. TreeSHAP decomposes each prediction into
+per-feature contributions. A self-hosted LLM translates the top-10
+attributions into analyst-facing narratives under structured prompt
+constraints. In live production deployment, the pipeline achieves
+a yield rate of 89%, up from 61% under the incumbent rule-based
+system. Monthly alert volume expanded from 211 to 302, reflecting
+broader true-positive coverage. This corresponds to 60% incremen-
+tal adverse detection beyond existing review workflows, substan-
+tially outperforming the incumbent rule-based approaches. Analyst
+feedback confirms that LLM-generated narratives reduce cognitive
+load during triage compared to raw SHAP visualisations.
+Three findings may be of broader interest to practitioners deploy-
+ing ML in regulated financial environments. First, the operational
+bottleneck in AML detection is often not model accuracy butexpla-
+nation usability. Thus, the LLM interpretation layer was critical to
+analyst adoption. Second, open-weight models deployed on-premise
+can satisfy data residency requirements without sacrificing expla-
+nation quality, making this approach viable for institutions that
+cannot use external API-based services. Third, structured prompt
+templates and periodic human review offer a practical path to re-
+ducing hallucination risk in high-stakes settings, although residual
+risk remains and requires ongoing monitoring.
+References
+[1] Sandhini Agarwal, Lama Ahmad, Jason Ai, Sam Altman, Andy Applebaum, Edwin
+Arbus, Rahul K Arora, Yu Bai, Bowen Baker, Haiming Bao, et al. 2025. gpt-oss-120b
+& gpt-oss-20b model card.arXiv preprint arXiv:2508.10925(2025).
+PAGE 9
+Detection, Attribution, Narration: An End-to-End Pipeline for Explainable Money Mule Identification KDD’26 - MLF workshop, August 9 - 13, 2026, Jeju, Korea
+[2] Marilyn Bello, Rafael Bello, María-Matilde García, Ann Nowé, Iván Sevillano-
+García, and Francisco Herrera. 2025. A three-Level Framework for LLM-Enhanced
+eXplainable AI: From technical explanations to natural language.Information
+Systems Frontiers(2025), 1–22.
+[3] Mateusz Cedro and David Martens. 2025. GraphXAIN: narratives to explain
+graph neural networks. InWorld Conference on Explainable Artificial Intelligence.
+Springer, 91–114.
+[4] European Parliament and Council of the European Union. 2024. Regulation (EU)
+2024/1689. https://eur-lex.europa.eu/eli/reg/2024/1689/oj Official Journal of the
+European Union.
+[5] Zhenfeng Huang. 2025. Enhancing Anti-Money Laundering by Money Mules De-
+tection on Transaction Graphs. InProceedings of the 2025 International Conference
+on Generative Artificial Intelligence for Business. 83–88.
+[6] Ganesh Jambhrunkar, Harsh Sharma, Saurav Singla, and Thirumalai Kailasam.
+2025. MuleTrack: A Lightweight Temporal Learning Framework for Money Mule
+Detection in Digital Payments. InInternational Work-Conference on Artificial
+Neural Networks. Springer, 384–397.
+[7] Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang, Wei Chen, Weidong Ma,
+Qiwei Ye, and Tie-Yan Liu. 2017. Lightgbm: A highly efficient gradient boosting
+decision tree.Advances in neural information processing systems30 (2017).
+[8] Scott M Lundberg, Gabriel Erion, Hugh Chen, Alex DeGrave, Jordan M Prutkin,
+Bala Nair, Ronit Katz, Jonathan Himmelfarb, Nisha Bansal, and Su-In Lee. 2020.
+From local explanations to global understanding with explainable AI for trees.
+Nature machine intelligence2, 1 (2020), 56–67.
+[9] Scott M Lundberg and Su-In Lee. 2017. A unified approach to interpreting model
+predictions.Advances in neural information processing systems30 (2017).
+[10] David Martens, James Hinns, Camille Dams, Mark Vergouwen, and Theodoros
+Evgeniou. 2025. Tell me a story! Narrative-driven XAI with Large Language
+Models.Decision Support Systems191 (2025), 114402.
+[11] Office of the Comptroller of the Currency. 2011. Supervisory Guidance on Model
+Risk Management. https://www.occ.gov/news-issuances/bulletins/2011/bulletin-
+2011-12a.pdf Board of Governors of the Federal Reserve System.
+[12] Tahereh Pourhabibi, Kok-Leong Ong, Booi H Kam, and Yee Ling Boo. 2020. Fraud
+detection: A systematic literature review of graph-based anomaly detection
+approaches.Decision Support Systems133 (2020), 113303.
+[13] David Savage, Qingmai Wang, Xiuzhen Zhang, Pauline Chou, and Xinghuo Yu.
+2017. Detection of Money Laundering Groups: Supervised Learning on Small
+Networks.. InAAAI Workshops. 5–11.
+[14] Altyeb Altaher Taha and Sharaf Jameel Malebary. 2020. An intelligent approach
+to credit card fraud detection using an optimized light gradient boosting machine.
+IEEE access8 (2020), 25579–25587.
+[15] Gemma Team, Thomas Mesnard, Cassidy Hardin, Robert Dadashi, Surya Bhupati-
+raju, Shreya Pathak, Laurent Sifre, Morgane Rivière, Mihir Sanjay Kale, Juliette
+Love, et al. 2024. Gemma: Open models based on gemini research and technology.
+arXiv preprint arXiv:2403.08295(2024).
+[16] Biao Xu, Yao Wang, Xiuwu Liao, and Kaidong Wang. 2023. Efficient fraud
+detection using deep boosting decision trees.Decision Support Systems175 (2023),
+114037.
+[17] An Yang, Anfeng Li, Baosong Yang, Beichen Zhang, Binyuan Hui, Bo Zheng,
+Bowen Yu, Chang Gao, Chengen Huang, Chenxu Lv, et al. 2025. Qwen3 technical
+report.arXiv preprint arXiv:2505.09388(2025).
+[18] Xianlong Zeng. 2024. Enhancing the interpretability of SHAP values using large
+language models.arXiv preprint arXiv:2409.00079(2024).
+[19] Alexandra Zytek, Sara Pido, Sarah Alnegheimish, Laure Berti-Equille, and Kalyan
+Veeramachaneni. 2024. Explingo: Explaining ai predictions using large language
+models. In2024 IEEE International Conference on Big Data (BigData). IEEE, 1197–
+1208.
+A Prompt Template
+This appendix reproduces the prompt used for production deploy-
+ment and for the LLM evaluation reported in Section 4.4. The
+prompt consists of a system message (Listing 1) that defines the
+analyst role, input fields, and required JSON schema, followed by a
+user message (Listing 2) that injects the per-case SHAP attribution
+payload at the position marked<CASE_JSON>.
+You are a financial crime analyst specializing in detecting Money
+Mule activities. Your task is to analyze individual cases by
+examining:
+- Feature values (value_raw): Metrics describing transaction
+behavior or customer profiles, along with their corresponding
+90th percentile (ref_p90, above_p90) and 50th percentile
+(ref_p50) benchmarks across all cases.
+- Feature meanings (feature_meaning): Clear explanations of what
+each feature name (name) represents.
+- SHAP values (shap) and absolute SHAP values (abs_shap):
+Indicators of each feature's impact on the model's prediction
+for the case.
+- Overall risk score and percentile (model_score and
+score_percentile): The case's risk assessment and its relative
+standing among all evaluated cases.
+Based on this information, identify potential suspicious patterns
+or red flags that explain why the case has its current risk
+score. Please explain your findings in plain language,
+avoiding technical jargon, so that analysts without
+specialized technical knowledge can easily understand. Please
+also keep it simple.
+Please respond strictly in **valid JSON** following exactly this
+schema:
+{
+"case_id": "<string>",
+"red_flags": [
+{
+"potential_pattern": "<short description of suspicious
+pattern>",
+"reason": "<detailed reason linking features and SHAP values
+to the issue>",
+"evidence_references": ["<feature_name>", "..."]
+}
+]
+}
+Listing 1: System prompt.
+Analyze the following case:
+Input data for a case:
+<CASE_JSON>
+Output (JSON format only):
+Listing 2: User message.
+B Example LLM Outputs and Analyst Reviews
+This appendix presents two representative LLM-generated red flag
+narratives produced by the production pipeline (Section 4.4), to-
+gether with the corresponding analyst verdicts recorded after man-
+ual review. For readability, we present the narrative content ex-
+tracted from the JSON outputs rather than the full raw JSON ob-
+jects. In both cases the analyst confirmed the alert as adverse and
+classified it under the money-mule typology (MM/UML).
+The ratio of transactions in the past 7 days compared to the past
+180 days is significantly higher than typical, and the total
+transaction value in the past 7 days is also elevated. This
+suggests a recent increase in activity that could be
+suspicious. The customer holds a relatively high number of
+open accounts (5), and the entity has been around for a
+considerable time (over 32 years). This, combined with the
+recent activity surge, could indicate an attempt to use
+established accounts for illicit purposes. The days since the
+last account opening is relatively short, which could indicate
+a sudden increase in account activity. This, combined with the
+recent surge in transaction activity, could be a red flag.
+Listing 3: Example 1 — LLM-generated red flag narrative.
+PAGE 10
+KDD’26 - MLF workshop, August 9 - 13, 2026, Jeju, Korea Y. Zhang, Y. Zhang, Y. Jin, K. Razis, N. Choo, K. Wong, X. Tang, K. Zhu, W. Lee, and J. Zhao
+The model flags this case as very high risk (99.44 percentile).
+This is driven by a combination of factors. The customer
+receives money from a very high number of different people (97
+counterparties in the last 180 days) and sends money to a
+larger than typical number of countries (9 countries in the
+last 180 days). The number of open accounts is also a
+contributing factor. This, combined with a relatively low
+total transaction value and the age of the account, suggests
+potential money mule activity.
+Listing 4: Example 2 — LLM-generated red flag narrative.

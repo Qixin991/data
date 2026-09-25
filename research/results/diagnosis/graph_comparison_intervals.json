@@ -1,0 +1,55 @@
+{
+  "comparisons": {
+    "ordinary_graph minus no_graph": {
+      "point": -0.01161472349106829,
+      "conditional_95_percent_interval": [
+        -0.022298528125624554,
+        -0.0014680450300806349
+      ]
+    },
+    "reliable_graph minus ordinary_graph": {
+      "point": 0.0018925858685998054,
+      "conditional_95_percent_interval": [
+        -0.0030785353125851924,
+        0.007742310653468562
+      ]
+    },
+    "reliable_pair minus reliable_graph": {
+      "point": 0.0012976343572344007,
+      "conditional_95_percent_interval": [
+        -0.001117223019736445,
+        0.0038949698133343563
+      ]
+    },
+    "reliable_pair minus no_graph": {
+      "point": -0.008424503265234085,
+      "conditional_95_percent_interval": [
+        -0.019454110705703187,
+        0.001992418403615923
+      ]
+    },
+    "trees D5 minus D3 (no common-factor features)": {
+      "point": 0.010223494415683154,
+      "conditional_95_percent_interval": [
+        -0.0010502221432090659,
+        0.01974636158189092
+      ]
+    },
+    "no_graph minus trees D5": {
+      "point": 0.0027573425010875563,
+      "conditional_95_percent_interval": [
+        -0.014070231796725322,
+        0.019275001886710726
+      ]
+    },
+    "reliable_pair minus trees D5": {
+      "point": -0.005667160764146528,
+      "conditional_95_percent_interval": [
+        -0.024272835679455596,
+        0.010676969417708898
+      ]
+    }
+  },
+  "replicates": 1000,
+  "limitation": "Conditional on 2016-2018 and selected checkpoints; no selection correction; shared year/product dependence not removed. Not final-test significance."
+}

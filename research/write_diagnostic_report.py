@@ -1,0 +1,134 @@
+"""Build a transparent development-stage report from completed diagnostic outputs."""
+from baselines import *
+import hashlib
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+OUT=ROOT/'results/diagnosis'
+g=pd.read_csv(OUT/'graph_summary.csv',index_col=0)
+t=pd.read_csv(OUT/'tree_summary_verified.csv',index_col=0)
+annual=pd.read_csv(OUT/'graph_validation_metrics.csv')
+seed=pd.read_csv(OUT/'trees_threads4/seedcheck_metrics.csv').groupby(['model','seed']).ap.mean().unstack()
+intervals=json.loads((OUT/'graph_comparison_intervals.json').read_text())['comparisons']
+names={'no_graph':'无图节点汇总（共享门控）','ordinary_graph':'普通有符号图','reliable_graph':'可靠性有符号图','reliable_pair':'可靠图＋学习成对暴露'}
+tnames={'D0_history_macro':'自身历史＋宏观及覆盖','D1_concentration':'再加入集中度','D2_market_changes':'再加入市场变化','D3_market_volatility':'再加入市场波动',
+ 'B2_XGBoost':'再加入共同因素（原B2）','B3_XGBoost_relations':'再加入原始8年关系（原B3）',
+ 'D4_raw12':'B2＋原始12年关系','D4_res8':'B2＋去共同成分8年关系','D4_res12':'B2＋去共同成分12年关系',
+ 'D5_relations_without_common':'不含共同因素的市场模型＋8年关系'}
+tree_table='| 模型 | 平均AP | 平均AUC | 平均Brier（越低越好） |\n|---|---:|---:|---:|\n'
+for key in tnames:
+    row=t.loc[key]; tree_table+=f'| {tnames[key]} | {row.ap:.6f} | {row.auc:.6f} | {row.brier:.6f} |\n'
+graph_table='| 模型 | 三种子平均AP | 种子AP范围 | 平均Brier |\n|---|---:|---:|---:|\n'
+for key,name in names.items():
+    row=g.loc[key]; graph_table+=f'| {name} | {row.ap_mean:.6f} | {row.ap_min:.6f}—{row.ap_max:.6f} | {row.brier:.6f} |\n'
+annual_table='| 模型 | 2016 | 2017 | 2018 |\n|---|---:|---:|---:|\n'
+for key,name in names.items():
+    av=annual[annual.model==key].groupby('year').ap.mean()
+    annual_table+=f'| {name} | {av[2016]:.6f} | {av[2017]:.6f} | {av[2018]:.6f} |\n'
+seed_table='| 固定同参数、原始列顺序的模型 | 种子42 | 种子2024 | 种子2026 |\n|---|---:|---:|---:|\n'
+for key in ['D3','B2','B3','D5']:
+    seed_table+=f'| {key} | {seed.loc[key,42]:.6f} | {seed.loc[key,2024]:.6f} | {seed.loc[key,2026]:.6f} |\n'
+interval_table='| AP差异（三种子性能平均之差） | 点估计 | 条件95%区间 |\n|---|---:|---|\n'
+for key,r in intervals.items():
+    lo,hi=r['conditional_95_percent_interval']; interval_table+=f'| {key} | {r["point"]:.6f} | [{lo:.6f}, {hi:.6f}] |\n'
+epoch={}
+for mode in names:
+    epoch[mode]=[json.loads((OUT/f'graphs/{mode}_{s}_selection.json').read_text())['epoch'] for s in [42,2024,2026]]
+
+fig,ax=plt.subplots(1,2,figsize=(12,4.3),layout='constrained')
+labels=['No graph + shared gate','Ordinary signed graph','Reliable signed graph','Reliable graph + pairs']
+colors=['#222222','#4477aa','#228833','#cc6677']
+gs=pd.read_csv(OUT/'graph_seed_metrics.csv')
+for j,(mode,name,color) in enumerate(zip(names,labels,colors)):
+    vals=gs[gs.model==mode].ap.to_numpy(); ax[0].scatter(vals,np.full(3,j),color=color,s=35)
+    ax[0].plot([g.loc[mode,'ap_mean']]*2,[j-.2,j+.2],color=color,lw=2)
+    aa=annual[annual.model==mode].groupby('year').ap
+    ax[1].plot(aa.mean().index,aa.mean(),label=name,color=color,marker='o')
+    ax[1].fill_between(aa.mean().index,aa.min(),aa.max(),color=color,alpha=.12)
+ax[0].set_yticks(range(4),labels); ax[0].invert_yaxis(); ax[0].set_xlabel('Mean annual validation AP'); ax[0].set_title('Three training seeds; selected checkpoints')
+ax[1].set_xticks([2016,2017,2018]); ax[1].set_xlabel('Sample year (outcome = following year)'); ax[1].set_ylabel('AP'); ax[1].set_title('Mean and range across seeds'); ax[1].legend(fontsize=8)
+for a in ax: a.grid(alpha=.2)
+fig.savefig(OUT/'diagnostic_comparison.png',dpi=180); plt.close(fig)
+
+report=f'''# 诊断结果与研究决策检查点
+
+本报告对应用户同意的“信息分解—共同因素/窗口—有限图模型对照”路线。结论仅适用于当前开发验证；未查看最终测试性能。
+
+当前可复核的核心结果：无图汇总三种子平均AP为{g.loc['no_graph','ap_mean']:.6f}，可靠图为{g.loc['reliable_graph','ap_mean']:.6f}，可靠图加成对暴露为{g.loc['reliable_pair','ap_mean']:.6f}。传统关系在不含共同因素的对照中有正增量，但本轮没有建立复杂图表示优于同信息简单汇总的证据。应区分“关系信息有无价值”和“当前图模型是否必要”。
+
+## 一、已经完成与未重复的工作
+
+复用了30年BACI审计与HS4聚合、宏观匹配、早期样本冻结、主特征、既有B2/B3模型。没有重新扫描269,894,500条原始记录。新增历史关系特征仅覆盖开发样本2007—2018，共18,813行；原始8年关系复算与缓存逐项一致。新增9年图输入缓存（2010—2018）、6个前向基准预测检查点及12个神经诊断模型。
+
+训练树使用样本年2007—2015；图分支使用2010—2015的前向预测，9,397个样本。验证样本年2016—2018，共4,630个样本，对应结果年2017—2019。2019—2020样本年的校准用途和2021—2023样本年的末端评价继续保留；2024结果年度仍须暂定单列，490实体口径未改变。
+
+## 二、树模型的信息分解与关系诊断
+
+{tree_table}
+
+每组使用相同六组参数预算（深度2/3/4 × 150/400棵树），按照三个验证年份AP等权平均选择。B2/B3直接复用旧结果。逐步加入顺序可能影响结论，且列顺序会影响随机列抽样；不能把单次差异解释为唯一的信息贡献，更不能作因果解释。
+
+新关系指标固定其他特征及样本。12年窗口并未引入更晚信息。去共同成分以窗口内其余目的地的当年平均变化作为代理，每个节点分别用含截距OLS拟合，至少六对有效观测，再从残差计算关系。它不是外生共同冲击的识别；短窗估计本身有不确定性。
+
+现有B2的共同因素同样是选定目的地市场变化的简单均值及历史波动，不是全球总进口额增长，也未按市场规模加权。因此该代理的预测增量为负，不能推出全球经济因素没有价值。后续如比较更有经济含义的市场规模加权或总量代理，应事先固定定义，并说明这是开发阶段修订。
+
+在保留共同因素的强基准上，延长窗口或先剔除共同成分，没有改善本轮平均AP。另有一个需要保留的线索：不包含共同因素时，传统关系可能有增量。不能因此笼统宣称“所有关系信息无效”。下表固定深度4、150棵树、四线程及原始特征列顺序，区分随机种子的影响：
+
+{seed_table}
+
+D3不含共同因素、包含市场变化和波动；B2增加共同因素；B3再增加关系；D5在D3上增加关系。这里B3固定深度4，与主表按验证选择出的深度3不同，数值不能混用。该补充由第一阶段结果启发，属于开发诊断。
+
+在统一列顺序的同参数比较中，D3三种子平均AP为0.428847，D5为0.439071；2016、2017、2018的三种子平均增量分别约0.022605、0.006854、0.001212。增量不是每年同样大，尤其不能把三个年份视为大量独立宏观情境。这一结果提示关系指标的价值依赖基准信息设定，尚不能断言共同因素在经济意义上“掩盖”了真实机制。
+
+## 三、四种神经修正的公平对照
+
+{graph_table}
+
+{annual_table}
+
+所有模型以同一个B3为基础，共享相同18维节点输入（9个值及缺失指示）、份额、基础风险、覆盖/集中度/关系元信息及可靠性门控。“无图”只表示不做消息传递与学习成对汇总；它仍使用共同门控，不能称为完全无关系信息的模型。它帮助检查复杂图表示是否超过同信息条件下的简单汇总。
+
+普通图和可靠图均用一层32维正负分支。每节点每符号先选5个邻居，随后作双向并集，最终度数可能超过5。成对函数是对称MLP，输入端点乘积、绝对差、符号与可靠性；保留未归一化份额乘积并按边权汇总。无图、普通/可靠图、成对图的活跃模块参数数目分别为3,937、5,985、7,329；前两类部分输入连接为零，并非所有参数都有同等作用。
+
+图分支基准预测每年只由更早样本训练；训练标签结果年不晚于该预测时点。基准参数固定采用开发期已选B3设置，这不是声称参数在历史当时已被独立选择。输入填补和标准化仅拟合2010—2015的图训练样本。最终验证基础树为已有2007—2015模型，没有使用其训练内拟合值冒充前向预测。
+
+统一使用种子42/2024/2026、15轮训练、0/5/10/15轮候选检查点、AdamW学习率0.001、平方修正惩罚0.01；0轮恰好回退到基础树。各模型选中轮次为：`{json.dumps(epoch)}`。部分模型在预算末端达到最高验证分，因此本轮不能证明更长训练不会改善，也不根据结果单独延长某个模型的训练。
+
+## 四、不确定性与实现检查
+
+{interval_table}
+
+区间按出口国—HS4聚类重采样1,000次，同一组合的三个验证年一起抽样；比较三种子平均性能，而不是另行选择种子集成。它条件于已用过的验证年份及已选择检查点，没有校正选模，也没有完全消除共同产品/全球冲击依赖，不能视为最终测试显著性。
+
+已检查：图对称性、相关/可靠性边界、对角线、份额及缓存节点特征与原表一致；训练后目的地重排预测不变；零门控精确回退基础树；修正幅度不超过2R。2015检查样本的门控中位数约0.257，没有全零门控样本，因此图修正未被实现错误统一关闭。
+
+发现并解决一个数值问题：当前XGBoost运行时改变线程数会改变训练结果。同一输入、预处理及种子下，恢复原四线程后B2/B3逐样本预测完全复现。正式树诊断统一四线程；早期单线程结果保留为排查记录，不纳入本报告。修复的图缓存反复解压问题只影响速度，不改变数据定义。
+
+## 五、当前能说什么，仍不能说什么
+
+本轮检查用于判断原先“可靠性图＋成对暴露”是否值得作为论文核心，不能用来证明所有图方法没有用。是否支持这一核心，应同时看成对模型相对可靠图、相对无图模型的差异、年度方向及不确定性，而不能只看它是否超过B3。
+
+若复杂图未超过同信息的无图模型，应暂停宣称图方法优势。可保留出口下行风险这个经济问题，转向检验目的地信息、共同因素处理与联动指标的条件增量；原创性仍须结合近邻文献核查和之后未使用的评价期，不能因开发分数较好就宣布形成毕业论文贡献。
+
+建议的下一步决策：保留经济问题，将图模型作为有价值但尚未证明必要的对照；先固定经济含义清晰的共同因素口径，补充仅元信息修正以区分节点信息、门控与非线性汇总的作用，再按照既定滚动评价及稳健性计划检验关系增量。不要因为一个发展阶段结果就扩大图搜索，也不要换标签追求图胜出。这涉及原先论文方法贡献的定位，按用户要求停在这里确认后再推进。
+
+完整末端评价、前向滚动扩展、信息滞后、490排除、标签/规模阈值、行业及粒度扩展、经济机制边界和最终论文尚未完成。这份诊断报告不是“已完成90%论文”的交付，也不会以未验证结果改写原始Word稿。
+
+## 文件导航
+
+- 详细诊断计划：`diagnostic_plan.md`
+- 正式树结果：`results/diagnosis/trees_threads4/`、`tree_summary_verified.csv`
+- 神经模型及逐轮记录：`results/diagnosis/graphs/`
+- 年度、种子与区间汇总：`results/diagnosis/graph_*.csv`、`graph_comparison_intervals.json`
+- 图与前向预测检查：`audit/graph_diagnostic_checks.json`、`crossfit_prediction_distribution.csv`
+- 复现检查：`audit/model_reproduction.json`
+- 对比图：`results/diagnosis/diagnostic_comparison.png`
+'''
+(ROOT/'诊断结果_信息分解与图模型.md').write_text(report,encoding='utf-8')
+manifest={'feature_sha256':hashlib.sha256((ROOT/'data/features_lag0_L8.csv.gz').read_bytes()).hexdigest(),
+          'relation_rows':len(pd.read_csv(ROOT/'data/diagnostic_relations_development.csv.gz')),
+          'graph_models':12,'validation_sample_years':[2016,2017,2018],'final_holdout_evaluated':False}
+assert manifest['feature_sha256']=='01e2961df48bf54862c4290997be746f2213638a5bf469b29c97fe5c4483d309'
+(ROOT/'audit/diagnostic_completion.json').write_text(json.dumps(manifest,indent=2))
+print(json.dumps(manifest,indent=2))
+print('REPORT',ROOT/'诊断结果_信息分解与图模型.md')

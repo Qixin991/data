@@ -1,0 +1,10 @@
+{
+  "B2_XGBoost": {
+    "max_depth": 4,
+    "n_estimators": 150
+  },
+  "B3_XGBoost_relations": {
+    "max_depth": 3,
+    "n_estimators": 150
+  }
+}

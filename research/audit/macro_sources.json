@@ -1,0 +1,17 @@
+[
+  {
+    "file": "API_FP.CPI.TOTL.ZG_DS2_en_excel_v2_375483.xls",
+    "sha256": "a7d090a79170596afec002075c040c2cac093b10bfe00f373654d3048e31a434",
+    "last_updated": "2026-07-13"
+  },
+  {
+    "file": "API_NY.GDP.MKTP.CD_DS2_en_excel_v2_418939.xls",
+    "sha256": "fe2fa151ff00c6b0072a22cb5f0c6944e0e3d6a1a44d9f24ddea9ee4dd144eef",
+    "last_updated": "2026-07-13"
+  },
+  {
+    "file": "API_NY.GDP.MKTP.KD.ZG_DS2_en_excel_v2_410834.xls",
+    "sha256": "558ee4718c29c5f3440abe4d3682c1a3ebef876cb9bf8d08019b3785e9adf4cc",
+    "last_updated": "2026-07-13"
+  }
+]

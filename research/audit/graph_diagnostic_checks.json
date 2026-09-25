@@ -1,0 +1,26 @@
+{
+  "audit_year": 2015,
+  "samples": 1569,
+  "symmetry_bounds_diagonal_and_feature_reconciliation": "passed",
+  "gate_quantiles": [
+    0.012922056950628757,
+    0.15058319568634035,
+    0.2565801739692688,
+    0.4560467183589935,
+    0.9562108516693115
+  ],
+  "zero_gate_fraction": 0.0,
+  "retained_undirected_edges_quantiles": [
+    6.0,
+    429.0,
+    680.0,
+    756.0,
+    781.0
+  ],
+  "positive_edge_reliability_quantiles": [
+    0.7064105868339539,
+    0.9418002367019653,
+    0.974854052066803
+  ],
+  "final_holdout_evaluated": false
+}

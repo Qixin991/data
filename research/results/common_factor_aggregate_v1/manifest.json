@@ -1,0 +1,101 @@
+{
+  "completed_utc": "2026-09-25T15:29:50.626881+00:00",
+  "new_model_fits": 6,
+  "reused_predictions": 12,
+  "preserved_inputs_sha256": {
+    "data/features_lag0_L8.csv.gz": "01e2961df48bf54862c4290997be746f2213638a5bf469b29c97fe5c4483d309",
+    "data/trade_arrays.npz": "2acdfb74f2bf8affe1de45cbd4cd13b6e7ee65e28a1a266de14a7a9b85b60b71",
+    "results/diagnosis/trees_threads4/seedcheck_D3_42.csv": "ee09098d5e77161bcec809de9d9f69a04591f9589046a0ec71ee01afb026b292",
+    "results/diagnosis/trees_threads4/seedcheck_D3_2024.csv": "fd7573153bb1a5fb1b800123fbfae9fd3d861092e706de134006cf2525a31363",
+    "results/diagnosis/trees_threads4/seedcheck_D3_2026.csv": "e674358bc3a0499098e6d8b1c974b87d68b8d6ace370c1a879ae69ff89bc7795",
+    "results/diagnosis/trees_threads4/seedcheck_D5_42.csv": "6fcb7819bc36d0be5f75e541ed2bc9f54d1972153121ef0573039e074b680ed5",
+    "results/diagnosis/trees_threads4/seedcheck_D5_2024.csv": "b8e27c4f72d8ce99bfed7b9ec54bdf067520b0eed06f42194fcc41e36ea82300",
+    "results/diagnosis/trees_threads4/seedcheck_D5_2026.csv": "bdcdafc302b38dd30f07717f4e0efd926ab5ae16e6f70293cd6234a03a26025f",
+    "results/diagnosis/trees_threads4/seedcheck_B2_42.csv": "ae73ff3ffdfc3198f45c13118f8cf85668d682d9c378666ffb32908d9617efb7",
+    "results/diagnosis/trees_threads4/seedcheck_B2_2024.csv": "1ecd3ecbf2855e8937cae5e76e167a5ebdd7bec53f6107deaa5954a4b384d5cd",
+    "results/diagnosis/trees_threads4/seedcheck_B2_2026.csv": "6f73429150ddbd30e684c8d2e8258af89ac26a7b66dfbff2aa3df82bb36341fb",
+    "results/diagnosis/trees_threads4/seedcheck_B3_42.csv": "07c7293eb85af2be3fa937b1fc4d982ae48f06b5abe198bfaf4635a66926c818",
+    "results/diagnosis/trees_threads4/seedcheck_B3_2024.csv": "31ad12cffde5483d8b5cc9274aada120245bacccab9b46fa23fc0bee0823553e",
+    "results/diagnosis/trees_threads4/seedcheck_B3_2026.csv": "5e9192c4997e3b38ac58b066e2c5afb6a39d7d8e475674b60a1c155f5556f4a6"
+  },
+  "sources": [
+    {
+      "model": "none_no_rel",
+      "seed": 42,
+      "source": "results\\diagnosis\\trees_threads4\\seedcheck_D3_42.csv",
+      "action": "reused, not retrained"
+    },
+    {
+      "model": "none_no_rel",
+      "seed": 2024,
+      "source": "results\\diagnosis\\trees_threads4\\seedcheck_D3_2024.csv",
+      "action": "reused, not retrained"
+    },
+    {
+      "model": "none_no_rel",
+      "seed": 2026,
+      "source": "results\\diagnosis\\trees_threads4\\seedcheck_D3_2026.csv",
+      "action": "reused, not retrained"
+    },
+    {
+      "model": "none_rel",
+      "seed": 42,
+      "source": "results\\diagnosis\\trees_threads4\\seedcheck_D5_42.csv",
+      "action": "reused, not retrained"
+    },
+    {
+      "model": "none_rel",
+      "seed": 2024,
+      "source": "results\\diagnosis\\trees_threads4\\seedcheck_D5_2024.csv",
+      "action": "reused, not retrained"
+    },
+    {
+      "model": "none_rel",
+      "seed": 2026,
+      "source": "results\\diagnosis\\trees_threads4\\seedcheck_D5_2026.csv",
+      "action": "reused, not retrained"
+    },
+    {
+      "model": "equal_no_rel",
+      "seed": 42,
+      "source": "results\\diagnosis\\trees_threads4\\seedcheck_B2_42.csv",
+      "action": "reused, not retrained"
+    },
+    {
+      "model": "equal_no_rel",
+      "seed": 2024,
+      "source": "results\\diagnosis\\trees_threads4\\seedcheck_B2_2024.csv",
+      "action": "reused, not retrained"
+    },
+    {
+      "model": "equal_no_rel",
+      "seed": 2026,
+      "source": "results\\diagnosis\\trees_threads4\\seedcheck_B2_2026.csv",
+      "action": "reused, not retrained"
+    },
+    {
+      "model": "equal_rel",
+      "seed": 42,
+      "source": "results\\diagnosis\\trees_threads4\\seedcheck_B3_42.csv",
+      "action": "reused, not retrained"
+    },
+    {
+      "model": "equal_rel",
+      "seed": 2024,
+      "source": "results\\diagnosis\\trees_threads4\\seedcheck_B3_2024.csv",
+      "action": "reused, not retrained"
+    },
+    {
+      "model": "equal_rel",
+      "seed": 2026,
+      "source": "results\\diagnosis\\trees_threads4\\seedcheck_B3_2026.csv",
+      "action": "reused, not retrained"
+    }
+  ],
+  "final_holdout_evaluated": false,
+  "interval_limitation": "Conditional on reused validation years and fixed previously selected settings; not selection adjusted; shared product/global dependence remains",
+  "code_sha256": {
+    "common_factor_candidates.py": "0893adcf5320b155cf73b7a7af3c9dd3195f605336e82b2eece3f6630f119c59",
+    "experiment_common_factor.py": "1d41203d37d71198260d6f82702960f37c7743d633f606e7bf7199622bece77e"
+  }
+}

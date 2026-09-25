@@ -1,0 +1,414 @@
+January 2026 BACI update
+Release Notes
+Pierre Cotterlaz
+January 22, 2026
+Contents
+1 What’s new ? 1
+2 Comparison of descriptive statistics 2
+2.1 Total value of trade flows . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2
+2.2 Number of observations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+2.3 Total quantity . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+2.4 Number of dyads . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 14
+2.5 Number of exporters . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+2.6 Number of exporters . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22
+1 What’s new ?
+Source data (Comtrade) was updated.
+Fobization process was simplified, with little effects on final outcome.
+1
+2 Comparison of descriptive statistics
+2.1 Total value of trade flows
+Figure 1: Total value of trade flows, revision HS92, BACI 202601 vs 202501
+5000G$
+10000G$
+15000G$
+20000G$
+25000G$
+2000 2010 2020
+Trade value
+Version:
+202501
+202601
+2
+Figure 2: Total value of trade flows, revision HS96, BACI 202601 vs 202501
+5000G$
+10000G$
+15000G$
+20000G$
+25000G$
+1995 2000 2005 2010 2015 2020 2025
+Trade value
+Version:
+202501
+202601
+Figure 3: Total value of trade flows, revision HS02, BACI 202601 vs 202501
+10000G$
+15000G$
+20000G$
+25000G$
+2005 2010 2015 2020 2025
+Trade value
+Version:
+202501
+202601
+3
+Figure 4: Total value of trade flows, revision HS07, BACI 202601 vs 202501
+12500G$
+15000G$
+17500G$
+20000G$
+22500G$
+2010 2015 2020
+Trade value
+Version:
+202501
+202601
+Figure 5: Total value of trade flows, revision HS12, BACI 202601 vs 202501
+17500G$
+20000G$
+22500G$
+2015 2020
+Trade value
+Version:
+202501
+202601
+4
+Figure 6: Total value of trade flows, revision HS17, BACI 202601 vs 202501
+18000G$
+20000G$
+22000G$
+24000G$
+2018 2020 2022 2024
+Trade value
+Version:
+202501
+202601
+5
+Figure 7: Number of observations, revision HS92, BACI 202601 vs 202501
+6M
+8M
+10M
+2000 2010 2020
+Nb of dyad−products
+Version:
+202501
+202601
+2.2 Number of observations
+6
+Figure 8: Number of observations, revision HS96, BACI 202601 vs 202501
+4M
+6M
+8M
+10M
+1995 2000 2005 2010 2015 2020 2025
+Nb of dyad−products
+Version:
+202501
+202601
+Figure 9: Number of observations, revision HS02, BACI 202601 vs 202501
+7M
+8M
+9M
+10M
+11M
+2005 2010 2015 2020 2025
+Nb of dyad−products
+Version:
+202501
+202601
+7
+Figure 10: Number of observations, revision HS07, BACI 202601 vs 202501
+8M
+9M
+10M
+11M
+2010 2015 2020
+Nb of dyad−products
+Version:
+202501
+202601
+Figure 11: Number of observations, revision HS12, BACI 202601 vs 202501
+9M
+10M
+11M
+2015 2020
+Nb of dyad−products
+Version:
+202501
+202601
+8
+Figure 12: Number of observations, revision HS17, BACI 202601 vs 202501
+10M
+10.5M
+11M
+11.5M
+2018 2020 2022 2024
+Nb of dyad−products
+Version:
+202501
+202601
+9
+Figure 13: Total quantity (Gt) of trade flows, revision HS92, BACI 202601 vs 202501
+8Gt
+10Gt
+12Gt
+14Gt
+2000 2010 2020
+Quantity (in tonnes)
+Version:
+202501
+202601
+2.3 Total quantity
+10
+Figure 14: Total quantity (Gt) of trade flows, revision HS96, BACI 202601 vs 202501
+8Gt
+10Gt
+12Gt
+14Gt
+1995 2000 2005 2010 2015 2020 2025
+Quantity (in tonnes)
+Version:
+202501
+202601
+Figure 15: Total quantity (Gt) of trade flows, revision HS02, BACI 202601 vs 202501
+8Gt
+10Gt
+12Gt
+14Gt
+2005 2010 2015 2020 2025
+Quantity (in tonnes)
+Version:
+202501
+202601
+11
+Figure 16: Total quantity (Gt) of trade flows, revision HS07, BACI 202601 vs 202501
+10Gt
+12Gt
+14Gt
+2010 2015 2020
+Quantity (in tonnes)
+Version:
+202501
+202601
+Figure 17: Total quantity (Gt) of trade flows, revision HS12, BACI 202601 vs 202501
+13Gt
+13.5Gt
+14Gt
+14.5Gt
+15Gt
+15.5Gt
+2015 2020
+Quantity (in tonnes)
+Version:
+202501
+202601
+12
+Figure 18: Total quantity (Gt) of trade flows, revision HS17, BACI 202601 vs 202501
+14Gt
+14.5Gt
+15Gt
+2018 2020 2022 2024
+Quantity (in tonnes)
+Version:
+202501
+202601
+13
+Figure 19: Number of dyads, revision HS92, BACI 202601 vs 202501
+22k
+26k
+30k
+2000 2010 2020
+Nb of dyads
+Version:
+202501
+202601
+2.4 Number of dyads
+14
+Figure 20: Number of dyads, revision HS96, BACI 202601 vs 202501
+15k
+20k
+25k
+30k
+1995 2000 2005 2010 2015 2020 2025
+Nb of dyads
+Version:
+202501
+202601
+Figure 21: Number of dyads, revision HS02, BACI 202601 vs 202501
+21k
+24k
+27k
+30k
+33k
+2005 2010 2015 2020 2025
+Nb of dyads
+Version:
+202501
+202601
+15
+Figure 22: Number of dyads, revision HS07, BACI 202601 vs 202501
+21k
+24k
+27k
+30k
+33k
+2010 2015 2020
+Nb of dyads
+Version:
+202501
+202601
+Figure 23: Number of dyads, revision HS12, BACI 202601 vs 202501
+25k
+27k
+29k
+31k
+2015 2020
+Nb of dyads
+Version:
+202501
+202601
+16
+Figure 24: Number of dyads, revision HS17, BACI 202601 vs 202501
+27k
+28k
+29k
+30k
+31k
+2018 2020 2022 2024
+Nb of dyads
+Version:
+202501
+202601
+17
+Figure 25: Number of exporters, revision HS92, BACI 202601 vs 202501
+215
+220
+225
+2000 2010 2020
+Nb of exporters
+Version:
+202501
+202601
+2.5 Number of exporters
+18
+Figure 26: Number of exporters, revision HS96, BACI 202601 vs 202501
+215
+220
+225
+1995 2000 2005 2010 2015 2020 2025
+Nb of exporters
+Version:
+202501
+202601
+Figure 27: Number of exporters, revision HS02, BACI 202601 vs 202501
+222
+223
+224
+225
+226
+227
+2005 2010 2015 2020 2025
+Nb of exporters
+Version:
+202501
+202601
+19
+Figure 28: Number of exporters, revision HS07, BACI 202601 vs 202501
+223
+224
+225
+226
+227
+2010 2015 2020
+Nb of exporters
+Version:
+202501
+202601
+Figure 29: Number of exporters, revision HS12, BACI 202601 vs 202501
+226
+226.2
+226.4
+226.6
+226.8
+227
+2015 2020
+Nb of exporters
+Version:
+202501
+202601
+20
+Figure 30: Number of exporters, revision HS17, BACI 202601 vs 202501
+225.96
+225.98
+226
+226.02
+226.04
+2018 2020 2022 2024
+Nb of exporters
+Version:
+202501
+202601
+21
+Figure 31: Number of products, revision HS92, BACI 202601 vs 202501
+4700
+4800
+4900
+5000
+2000 2010 2020
+Nb of products
+Version:
+202501
+202601
+2.6 Number of exporters
+22
+Figure 32: Number of products, revision HS96, BACI 202601 vs 202501
+4800
+4900
+5000
+5100
+1995 2000 2005 2010 2015 2020 2025
+Nb of products
+Version:
+202501
+202601
+Figure 33: Number of products, revision HS02, BACI 202601 vs 202501
+5000
+5100
+5200
+1995 2000 2005 2010 2015 2020 2025
+Nb of products
+Version:
+202501
+202601
+23
+Figure 34: Number of products, revision HS07, BACI 202601 vs 202501
+5030
+5040
+1995 2000 2005 2010 2015 2020 2025
+Nb of products
+Version:
+202501
+202601
+Figure 35: Number of products, revision HS12, BACI 202601 vs 202501
+5198.00
+5198.25
+5198.50
+5198.75
+5199.00
+1995 2000 2005 2010 2015 2020 2025
+Nb of products
+Version:
+202501
+202601
+24
+Figure 36: Number of products, revision HS17, BACI 202601 vs 202501
+5380.00
+5380.25
+5380.50
+5380.75
+5381.00
+1995 2000 2005 2010 2015 2020 2025
+Nb of products
+Version:
+202501
+202601
+25

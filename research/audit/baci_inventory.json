@@ -1,0 +1,167 @@
+[
+  {
+    "name": "BACI_HS92_Y1995_V202601.csv",
+    "bytes": 160257663,
+    "compressed_bytes": 44679446
+  },
+  {
+    "name": "BACI_HS92_Y1996_V202601.csv",
+    "bytes": 172786703,
+    "compressed_bytes": 48346867
+  },
+  {
+    "name": "BACI_HS92_Y1997_V202601.csv",
+    "bytes": 181561651,
+    "compressed_bytes": 50750747
+  },
+  {
+    "name": "BACI_HS92_Y1998_V202601.csv",
+    "bytes": 188727733,
+    "compressed_bytes": 52804390
+  },
+  {
+    "name": "BACI_HS92_Y1999_V202601.csv",
+    "bytes": 194190170,
+    "compressed_bytes": 54269508
+  },
+  {
+    "name": "BACI_HS92_Y2000_V202601.csv",
+    "bytes": 235369973,
+    "compressed_bytes": 64992099
+  },
+  {
+    "name": "BACI_HS92_Y2001_V202601.csv",
+    "bytes": 243157306,
+    "compressed_bytes": 67011019
+  },
+  {
+    "name": "BACI_HS92_Y2002_V202601.csv",
+    "bytes": 250081595,
+    "compressed_bytes": 68925177
+  },
+  {
+    "name": "BACI_HS92_Y2003_V202601.csv",
+    "bytes": 258436300,
+    "compressed_bytes": 71241072
+  },
+  {
+    "name": "BACI_HS92_Y2004_V202601.csv",
+    "bytes": 271058831,
+    "compressed_bytes": 74843919
+  },
+  {
+    "name": "BACI_HS92_Y2005_V202601.csv",
+    "bytes": 280977055,
+    "compressed_bytes": 77648747
+  },
+  {
+    "name": "BACI_HS92_Y2006_V202601.csv",
+    "bytes": 292659128,
+    "compressed_bytes": 80888408
+  },
+  {
+    "name": "BACI_HS92_Y2007_V202601.csv",
+    "bytes": 299210276,
+    "compressed_bytes": 83022568
+  },
+  {
+    "name": "BACI_HS92_Y2008_V202601.csv",
+    "bytes": 304944540,
+    "compressed_bytes": 84871955
+  },
+  {
+    "name": "BACI_HS92_Y2009_V202601.csv",
+    "bytes": 299979225,
+    "compressed_bytes": 82869195
+  },
+  {
+    "name": "BACI_HS92_Y2010_V202601.csv",
+    "bytes": 308324815,
+    "compressed_bytes": 85254029
+  },
+  {
+    "name": "BACI_HS92_Y2011_V202601.csv",
+    "bytes": 314243232,
+    "compressed_bytes": 87075389
+  },
+  {
+    "name": "BACI_HS92_Y2012_V202601.csv",
+    "bytes": 323636061,
+    "compressed_bytes": 89412719
+  },
+  {
+    "name": "BACI_HS92_Y2013_V202601.csv",
+    "bytes": 329313735,
+    "compressed_bytes": 90943250
+  },
+  {
+    "name": "BACI_HS92_Y2014_V202601.csv",
+    "bytes": 330955776,
+    "compressed_bytes": 91402676
+  },
+  {
+    "name": "BACI_HS92_Y2015_V202601.csv",
+    "bytes": 341652834,
+    "compressed_bytes": 93651766
+  },
+  {
+    "name": "BACI_HS92_Y2016_V202601.csv",
+    "bytes": 343910135,
+    "compressed_bytes": 94366457
+  },
+  {
+    "name": "BACI_HS92_Y2017_V202601.csv",
+    "bytes": 352267152,
+    "compressed_bytes": 96664899
+  },
+  {
+    "name": "BACI_HS92_Y2018_V202601.csv",
+    "bytes": 355783100,
+    "compressed_bytes": 97685028
+  },
+  {
+    "name": "BACI_HS92_Y2019_V202601.csv",
+    "bytes": 358594558,
+    "compressed_bytes": 98211259
+  },
+  {
+    "name": "BACI_HS92_Y2020_V202601.csv",
+    "bytes": 346158094,
+    "compressed_bytes": 94613385
+  },
+  {
+    "name": "BACI_HS92_Y2021_V202601.csv",
+    "bytes": 362807915,
+    "compressed_bytes": 99018744
+  },
+  {
+    "name": "BACI_HS92_Y2022_V202601.csv",
+    "bytes": 363099803,
+    "compressed_bytes": 99132276
+  },
+  {
+    "name": "BACI_HS92_Y2023_V202601.csv",
+    "bytes": 363875725,
+    "compressed_bytes": 99129749
+  },
+  {
+    "name": "BACI_HS92_Y2024_V202601.csv",
+    "bytes": 344331363,
+    "compressed_bytes": 93900893
+  },
+  {
+    "name": "product_codes_HS92_V202601.csv",
+    "bytes": 525748,
+    "compressed_bytes": 96543
+  },
+  {
+    "name": "country_codes_V202601.csv",
+    "bytes": 5346,
+    "compressed_bytes": 3121
+  },
+  {
+    "name": "Readme.txt",
+    "bytes": 571,
+    "compressed_bytes": 389
+  }
+]

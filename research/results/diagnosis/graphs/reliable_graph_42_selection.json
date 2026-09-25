@@ -1,0 +1,7 @@
+{
+  "epoch": 10,
+  "mean_validation_ap": 0.4338304796639339,
+  "total_parameters": 7329,
+  "parameters_in_active_modules": 5985,
+  "property_checks_passed": true
+}

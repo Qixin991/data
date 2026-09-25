@@ -1,0 +1,298 @@
+The CEPII-BACI dataset
+The CEPII-BACI dataset
+Contents
+Description
+Download links
+Methodology
+Archives
+FAQ
+Reference
+License
+Contact
+BACI provides data on bilateral trade flows for 200 countries at the product level (5000 products). Products correspond to the “Harmonized System” nomenclature (6 digit code).
+Description
+BACI provides annual data on bilateral trade flows at the product level, with products classified using the Harmonized System (HS), the standard trade nomenclature used by most customs authorities worldwide. The HS is revised periodically (in 1992, 1996, 2002, 2007, 2012, 2017, and 2022), and BACI is available in each of these revisions.
+Trade data is available as a series of csv files, each corresponding to one year. Additionally, we provide country and product metadata. Each revision of the HS can be downloaded as a zip archive, which contains:
+trade flows files (one file for each year)
+a country metadata file mapping country codes to country names and ISO codes
+a product metadata file mapping product codes to product names
+a readme
+We detail below the naming conventions of the trade data files:
+HS revision
+Years available
+Name of the files
+92
+1995-2024
+BACI_HS92_Y
+year
+_V
+version
+.csv
+96
+1996-2024
+BACI_HS96_Y
+year
+_V
+version
+.csv
+02
+2002-2024
+BACI_HS02_Y
+year
+_V
+version
+.csv
+07
+2007-2024
+BACI_HS07_Y
+year
+_V
+version
+.csv
+12
+2012-2024
+BACI_HS12_Y
+year
+_V
+version
+.csv
+17
+2017-2024
+BACI_HS17_Y
+year
+_V
+version
+.csv
+22
+2022-2024
+BACI_HS22_Y
+year
+_V
+version
+.csv
+Each
+version
+of BACI is identified by the year and the month of its release, under the form
+YYYYMM
+(
+202601
+for the January 2026 release, for instance)
+year
+identifies the year during which the recorded trade flows took place.
+Each trade flow in BACI is defined by a unique combination of exporter, importer, product, and year. For each flow, we provide both the trade value and quantity.
+BACI contains 6 variables:
+Variable
+Description
+t
+Year
+k
+Product category (HS 6-digit code)
+i
+Exporter (3-digit country code)
+j
+Importer (3-digit country code)
+v
+Value of the trade flow (in thousands current USD)
+q
+Quantity (in metric tons)
+Warning
+The country codes in BACI are inherited from the UN Comtrade dataset, and may differ from standard ISO 3-digit country codes. For a mapping between the BACI country codes and country names, see the country metadata file included in the zip archive.
+For a mapping between product codes and product names, see the HS product metadata file included in the zip archive.
+All files are in CSV format, using commas as field delimiters, and dots as decimal separators. When reading the data, we advise you not to treat the product code (
+k
+) variable as numeric, which would remove the leading zeros of the HS codes.
+To save space, only the strictly positive trade flows are recorded in BACI.
+Download links
+Important
+Do not open the data with Microsoft Excel, there are too many observations! We are unable to provide subsamples of the data upon request. See
+R
+or
+Tad
+for free softwares able to open BACI.
+Last update: January 22, 2026. See the
+release notes
+.
+This is the 202601 version.
+HS92
+HS96
+HS02
+HS07
+HS12
+HS17
+HS22
+Each zip file corresponds to one revision of the Harmonized System, and contains annual trade flows files, as well as metadata files for country codes and product codes.
+Methodology
+BACI relies on data from the United Nations Statistical Division (Comtrade dataset). Since countries report both their imports and their exports to the United Nations, the raw data we use may have duplicates flows: trade from country
+\(i\)
+to country
+\(j\)
+may be reported by
+\(i\)
+as an export to
+\(j\)
+and by
+\(j\)
+as an import from
+\(i\)
+. The reported values should match, but in practice are virtually never identical, for two reasons:
+Import values are reported CIF (cost, insurance and freight) while exports are reported FOB (free on board).
+Mistakes are made, because of uncertainty on the final destination of exports, discrepancies in the classification of a given product, etc…
+BACI provides a unique, reconciled trade flow by implementing an harmonization procedure whose two main ingredients are:
+CIF costs are estimated and removed from import values to compute FOB import values.
+The reliability of each country as a reporter of trade data is assessed. If a reporter tends to provide data that are very different from the ones of its partners, it will be considered as unreliable and will be assigned a lower weight in the determination of the reconciled trade flow value.
+Archives
+Important
+These legacy versions are provided for replicability purposes, and should not be used in other circumstances.
+202501
+202401b
+202401
+202301
+202201
+202102
+202001
+201901
+HS92
+HS96
+HS02
+HS07
+HS12
+HS17
+HS22
+HS92
+HS96
+HS02
+HS07
+HS12
+HS17
+HS22
+Warning
+This version was superseded by version 202401b. It contained some flows within country, inherited from the Comtrade data, which were removed in version 202401b.
+HS92
+HS96
+HS02
+HS07
+HS12
+HS17
+HS22
+HS92
+HS96
+HS02
+HS07
+HS12
+HS17
+HS92
+HS96
+HS02
+HS07
+HS12
+HS17
+Trade flows
+HS92
+HS96
+HS02
+HS07
+HS12
+HS17
+Country codes
+Country codes
+Product codes
+HS92
+HS96
+HS02
+HS07
+HS12
+Zeros
+Zeros
+Reporter reliability
+Reporter reliability
+Trade flows
+HS92
+(2.36Go)
+HS96
+(2.28Go)
+HS02
+(1.83Go)
+HS07
+(1.33Go)
+HS12
+(831Mo)
+HS17
+(115Mo)
+Country codes
+Country codes
+Product codes
+HS92
+HS96
+HS02
+HS07
+HS12
+Zeros
+Zeros
+Reporter reliability
+Reporter reliability
+Trade flows
+HS92
+(1.86Go)
+HS96
+(1.69Go)
+HS02
+(1.35Go)
+HS07
+(956Mo)
+HS12
+(580Mo)
+Country codes
+Country codes
+Product codes
+HS92
+HS96
+HS02
+HS07
+HS12
+Zeros
+Zeros
+Reporter reliability
+Reporter reliability
+FAQ
+When is BACI updated?
+BACI is updated every year in January.
+Why are there differences between BACI and Comtrade?
+Although BACI is based on data from
+Comtrade
+, we apply a series of processing and harmonization steps to improve data quality. These methodological adjustments are expected to introduce discrepancies between BACI and the original Comtrade data. For a detailed explanation of these procedures, please refer to the
+CEPII working paper
+.
+Is data for the last year definitive ?
+The values and quantities of trade flows for the most recent year available in BACI are not necessarily definitive and may be significantly revised in future releases. This is because we download the source data (Comtrade) in January, at which point the dataset is often incomplete for the latest year. Specifically, some trade flows may be missing or reported by only one of the trading partners, rather than both. For more details on Comtrade’s data update schedule, please refer to their
+data availability dashboard
+.
+Can trade flows be revised in later versions of BACI?
+Yes, trade flows may be revised in subsequent versions of BACI, primarily due to updates in the Comtrade source data, since Comtrade occasionally revises past trade records. Additionally, we regularly introduce minor methodological improvements to the construction of BACI. As a result, the same trade flow may differ across versions of the database. For this reason, we strongly recommend that users avoid mixing data from different versions of BACI in their analyses.
+What are the conditions to use BACI?
+BACI is distributed under the Etalab
+Open Licence 2.0
+, which means that any use is authorized, provided the source is mentionned. Mentioning BACI and the CEPII is an appropriate reference, ideally a link to the webpage can be added.
+Why does BACI provide data only in the HS nomenclature?
+The Harmonized System (HS) is the standard nomenclature for international trade, used by customs authorities worldwide, making it the natural choice for trade data. Users seeking to merge BACI data with other classification systems can use the concordance tables provided by the
+World Bank
+.
+Is there data for Taiwan?
+The United Nations does not publish trade statistics for Taiwan. As a result, neither COMTRADE nor BACI include trade data explicitly labeled for Taiwan. However, the category “Asia, not elsewhere specified” (country code 490) serves as a reliable proxy. In theory, this code could include trade with any unspecified Asian territory, but in practice, it almost exclusively reflects trade with Taiwan, aside from a few exceptions among specific reporting countries.
+What is the geographic coverage of BACI?
+We have the same geographic coverage as Comtrade. This corresponds to most of the existing countries. A list of the countries available in Comtrade can be downloaded
+here
+.
+Can the trade flows data be opened with Excel?
+No, the BACI trade flows files are too large to be opened with Excel, or another spreadsheet software. See
+R
+or
+Tad
+for free softwares able to open BACI.
+How to report an issue / suggest an improvement?
+Do not hesitate to send an e-mail to baci@cepii.fr. If you write us to warn about an issue, please indicate the version of the database that you are using (HS revision and version identifier).
+Reference
+Gaulier, G. and Zignago, S. (2010) BACI: International Trade Database at the Product-Level. The 1994-2007 Version. CEPII Working Paper, N°2010-23
+License
+Etalab 2.0
+Contact
+baci@cepii.fr

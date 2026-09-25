@@ -1,0 +1,15 @@
+{
+  "comparison": "selected B3 minus selected B2; equal-weight mean yearly validation AP",
+  "point_difference": -3.208692956496728e-05,
+  "conditional_cluster_bootstrap_95_percent_interval": [
+    -0.010708774257174413,
+    0.011849224992338772
+  ],
+  "bootstrap_replicates": 1000,
+  "clusters": 1612,
+  "resampling_unit": "exporter-HS4 with all its validation years kept together",
+  "limitation": "conditional on these 3 validation years and already-selected hyperparameters; not selection-adjusted, not a final-test interval; global/product cross-cluster dependence remains",
+  "matched_parameter_positive_comparisons": 1,
+  "matched_parameter_total": 6,
+  "final_test_evaluated": false
+}

@@ -1,0 +1,31 @@
+﻿country_code,country_name,country_iso2,country_iso3,historical_entity
+58,Belgium-Luxembourg (...1998),BE,BEL,True
+86,Br. Indian Ocean Terr.,IO,IOT,False
+162,Christmas Isds,CX,CXR,False
+166,Cocos Isds,CC,CCK,False
+175,Mayotte (Overseas France),YT,MYT,False
+184,Cook Isds,CK,COK,False
+200,Czechoslovakia (...1992),CS,CSK,True
+238,Falkland Isds (Malvinas),FK,FLK,False
+260,Fr. South Antarctic Terr.,TF,ATF,False
+278,Dem. Rep. of Germany (...1990),DD,DDR,True
+280,Fed. Rep. of Germany (...1990),DE,DEU,True
+490,"Other Asia, nes",,S19,False
+500,Montserrat,MS,MSR,False
+530,Netherlands Antilles (...2010),AN,ANT,True
+535,Bonaire,BQ,BES,False
+570,Niue,NU,NIU,False
+574,Norfolk Isds,NF,NFK,False
+612,Pitcairn,PN,PCN,False
+652,Saint BarthÃ©lemy,BL,BLM,False
+654,Saint Helena,SH,SHN,False
+660,Anguilla,AI,AIA,False
+666,Saint Pierre and Miquelon,PM,SPM,False
+697,"Europe EFTA, nes",,R20,False
+711,Southern African Customs Union (...1999),,ZA1,True
+736,Sudan (...2011),SD,SDN,True
+772,Tokelau,TK,TKL,False
+810,USSR (...1990),SU,SUN,True
+849,US Misc. Pacific Isds,PU,PUS,False
+876,Wallis and Futuna Isds,WF,WLF,False
+891,Serbia and Montenegro (...2005),CS,SCG,True

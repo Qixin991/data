@@ -1,0 +1,22 @@
+# Local Python dependencies
+.deps/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Large generated / intermediate datasets
+data/graphs_L8/
+data/*.npz
+data/*.csv.gz
+
+# Large model / prediction artifacts
+results/**/*.pkl
+results/**/*.pt
+results/**/*.pth
+
+# Temporary files
+*.tmp
+# Reproducible row-level prediction outputs
+results/**/*_predictions.csv
+results/**/validation_predictions.csv
